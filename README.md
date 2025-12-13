@@ -1,21 +1,24 @@
 # spEARS
 
+spEARS (Simple Project with EARS) is a lightweight methodology for working with AI coding agents. It provides structured prompts and rules that help agents understand project context, track progress, and maintain consistency across sessions. The approach emphasizes root cause analysis and reflection over quick fixes.
+
 - [Methodology](SPEARS.md)
 - [Agent Rules](SPEARS_AGENT.md)
 
-## Claude Code Commands
+## Installation
 
-spEARS includes reusable Claude Code slash commands in `.claude/commands/`.
+Copy `SPEARS.md` and `SPEARS_AGENT.md` into your project's root directory:
 
-### Available Commands
+```bash
+# From your project root
+cp path/to/spears/SPEARS.md path/to/spears/SPEARS_AGENT.md .
+```
 
-- `/spears-reflection` - End-of-session command that reflects on progress, captures next steps, and outputs a continuation prompt to clipboard
+Then reference them in your project's `CLAUDE.md` or `AGENTS.md`.
 
-### Installation
+### Optional: Claude Code Commands
 
-**Option 1: Vendor into your project (recommended)**
-
-Copy the `.claude/commands/` directory into your project's `.claude/` directory:
+spEARS also includes reusable Claude Code slash commands in `.claude/commands/`. To use them, copy the commands directory:
 
 ```bash
 # From your project root
@@ -24,14 +27,6 @@ cp -r path/to/spears/.claude/commands .claude/
 
 Commands become available to your whole team via git.
 
-**Option 2: Personal installation**
+#### Available Commands
 
-Copy to your user commands directory for availability across all projects:
-
-```bash
-cp -r path/to/spears/.claude/commands/* ~/.claude/commands/
-```
-
-**Option 3: Plugin Marketplace (future)**
-
-Claude Code supports a plugin marketplace system for versioned, auto-updating distribution. See [Plugin Marketplaces documentation](https://docs.anthropic.com/en/docs/claude-code/plugins#plugin-marketplaces) for details on creating a marketplace. This is a potential future direction for spEARS distribution.
+- `/spears-reflection` - End-of-session command that reflects on progress, captures next steps, and outputs a continuation prompt to clipboard
