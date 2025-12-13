@@ -1,10 +1,11 @@
 # spEARS Agent Rules
 
-This document provides **strict workflow rules** for LLM agents implementing the spEARS methodology. For full methodology details, see [SPEARS.md](./SPEARS.md).
+This document provides **strict workflow rules** for LLM agents implementing the
+spEARS methodology. For full methodology details, see [SPEARS.md](./SPEARS.md).
 
 ## Quick Reference
 
-```
+```text
 specs/feature-name/
 ├── requirements.md   # WHAT (EARS format, immutable IDs, NO status)
 ├── design.md         # HOW (architecture, living document)
@@ -82,7 +83,9 @@ Document technical design decisions:
 - Error handling strategy
 - Key technical decisions and trade-offs
 
-**PURPOSE:** design.md is where the team discusses approaches and reaches consensus BEFORE writing code. Implementation follows design, not the other way around.
+**PURPOSE:** design.md is where the team discusses approaches and reaches
+consensus BEFORE writing code. Implementation follows design, not the other way
+around.
 
 **RULE:** Get team agreement on design.md before proceeding to implementation.
 
@@ -138,7 +141,8 @@ Document technical design decisions:
 - Discuss trade-offs with team
 - Get agreement on technical approach
 
-**WHY:** Clear requirements + agreed design makes TDD powerful. You know exactly what to test because the expected behavior is unambiguous.
+**WHY:** Clear requirements + agreed design makes TDD powerful. You know exactly
+what to test because the expected behavior is unambiguous.
 
 ### Step 3: Update Status
 
@@ -146,9 +150,10 @@ In `executive.md`, change status: ❌ → 🔄
 
 ### Step 4: Write Tests
 
-TDD is recommended but not strictly required. Clear requirements and design make tests easier to write:
+TDD is recommended but not strictly required. Clear requirements and design make
+tests easier to write:
 
-```
+```text
 // @requirement REQ-XX-001
 // Test that [expected behavior from requirements]
 ```
@@ -157,7 +162,7 @@ TDD is recommended but not strictly required. Clear requirements and design make
 
 Link code to requirements:
 
-```
+```text
 // REQ-XX-001: [Brief description]
 // Implementation of [requirement title]
 ```
@@ -212,10 +217,12 @@ In `executive.md`, change status: 🔄 → ✅
 - [ ] Title describes USER BENEFIT, not system feature
 - [ ] WHEN clause describes user action/context, not system internals
 - [ ] SHALL clause describes observable user outcome
-- [ ] Rationale answers "why does the user care?" OR "does this provide value to the user?"
+- [ ] Rationale answers "why does the user care?" OR "does this provide value to
+  the user?"
 - [ ] Non-technical user could understand the value
 
-**Core principle:** spEARS projects emphasize incremental user-facing value over technical concerns.
+**Core principle:** spEARS projects emphasize incremental user-facing value over
+technical concerns.
 
 ### Implementation-Creep Check
 
@@ -232,13 +239,17 @@ In `executive.md`, change status: 🔄 → ✅
 
 ### Self-Containment Check (CRITICAL - ALL DOCUMENTS)
 
-**This is the most violated principle.** All spec documents MUST be understandable without external context.
+**This is the most violated principle.** All spec documents MUST be
+understandable without external context.
 
 **Severity by document:**
 
-1. **design.md** - MOST CRITICAL. Free-form prose invites vague references. This is where violations happen most.
-2. **executive.md** - HIGH. Summaries often reference "improvements" without specifying what improved.
-3. **requirements.md** - MODERATE. EARS structure naturally guards against this, but rationales can still violate.
+1. **design.md** - MOST CRITICAL. Free-form prose invites vague references. This
+   is where violations happen most.
+2. **executive.md** - HIGH. Summaries often reference "improvements" without
+   specifying what improved.
+3. **requirements.md** - MODERATE. EARS structure naturally guards against this,
+   but rationales can still violate.
 
 **Checklist:**
 
@@ -261,7 +272,8 @@ In `executive.md`, change status: 🔄 → ✅
 
 #### design.md Self-Containment Anti-Patterns
 
-**Implicit Versioning** - References "new/updated/improved" without specifying what:
+**Implicit Versioning** - References "new/updated/improved" without specifying
+what:
 
 | BAD | GOOD |
 |-----|------|
@@ -285,7 +297,8 @@ In `executive.md`, change status: 🔄 → ✅
 
 ---
 
-**WHY:** If someone reads any spec document in 2 years, they should understand it completely without reading git history, other docs, or the codebase.
+**WHY:** If someone reads any spec document in 2 years, they should understand
+it completely without reading git history, other docs, or the codebase.
 
 ---
 
@@ -448,7 +461,7 @@ Titles set the tone. Bad titles poison the whole requirement.
 
 Reference requirement IDs:
 
-```
+```text
 Implement rate limiting (REQ-RL-001)
 
 - Add IP-based rate limiting middleware
@@ -516,7 +529,8 @@ rg "// REQ-" src/
 
 ## Reference
 
-For complete methodology details, examples, and FAQ, see [SPEARS.md](./SPEARS.md).
+For complete methodology details, examples, and FAQ, see
+[SPEARS.md](./SPEARS.md).
 
 ---
 

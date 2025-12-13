@@ -1,6 +1,8 @@
 # spEARS: Simple Project with EARS
 
-**spEARS** (Simple Project with Easy Approach to Requirements Syntax) is a lightweight requirements-based methodology that provides explicit traceability from business requirements → tests → code.
+**spEARS** (Simple Project with Easy Approach to Requirements Syntax) is a
+lightweight requirements-based methodology that provides explicit traceability
+from business requirements → tests → code.
 
 ## Table of Contents
 
@@ -18,10 +20,12 @@
 
 ### Core Principles
 
-1. **Requirements First**: Define what needs to be built before writing tests or code
+1. **Requirements First**: Define what needs to be built before writing tests or
+   code
 2. **Testable Specifications**: Every requirement must be verifiable
 3. **Immutable Traceability**: Requirements get permanent IDs that never change
-4. **Living Documentation**: Specs evolve with the codebase, not as separate artifacts
+4. **Living Documentation**: Specs evolve with the codebase, not as separate
+   artifacts
 5. **YAGNI/KISS**: Only use specs when they add clear value
 
 ### When to Create Specs
@@ -58,7 +62,8 @@
 - Edge cases discovered in production
 - Unclear verification status
 
-**Solution:** EARS format provides verifiable acceptance criteria, `executive.md` tracks status
+**Solution:** EARS format provides verifiable acceptance criteria,
+`executive.md` tracks status
 
 **Problem 3: "What will break if I change this?"**
 
@@ -66,7 +71,8 @@
 - Implementation doesn't clearly link to requirements
 - Refactoring is risky without understanding dependencies
 
-**Solution:** Requirement IDs create grep-able links between requirements, tests, and code
+**Solution:** Requirement IDs create grep-able links between requirements,
+tests, and code
 
 **Problem 4: "What tests do I need to write?"**
 
@@ -74,13 +80,14 @@
 - Tests written after code may just verify current behavior
 - No systematic approach to test planning
 
-**Solution:** EARS statements directly translate to test cases (one WHEN/SHALL = one test)
+**Solution:** EARS statements directly translate to test cases (one WHEN/SHALL =
+one test)
 
 ## The Three-Document Pattern
 
 Each feature gets a spec directory with three files:
 
-```
+```text
 specs/feature-name/
 ├── requirements.md   # WHAT to build (EARS format, immutable IDs, timeless)
 ├── design.md         # HOW to build it (architecture, implementation, living)
@@ -97,11 +104,13 @@ specs/feature-name/
 
 ## EARS Format Guide
 
-EARS (Easy Approach to Requirements Syntax) was developed at Rolls-Royce for aviation systems. It provides a simple, consistent structure for writing unambiguous requirements.
+EARS (Easy Approach to Requirements Syntax) was developed at Rolls-Royce for
+aviation systems. It provides a simple, consistent structure for writing
+unambiguous requirements.
 
 ### Basic Structure
 
-```
+```text
 WHEN [trigger condition]
 THE SYSTEM SHALL [expected behavior]
 ```
@@ -214,7 +223,8 @@ THE SYSTEM SHALL allow new requests from previously blocked IPs
 
 Use immutable IDs: `REQ-[ABBREV]-###`
 
-- **[ABBREV]**: Short abbreviation (e.g., RL for Rate Limiting, UA for User Auth)
+- **[ABBREV]**: Short abbreviation (e.g., RL for Rate Limiting, UA for User
+  Auth)
 - **###**: Zero-padded sequential number (001, 002, etc.)
 - **Once assigned, IDs are NEVER reused or changed**
 
@@ -248,9 +258,11 @@ Titles SHALL describe USER BENEFITS, not system features.
 Every rationale MUST answer one of these questions:
 
 - **"Why does the USER care?"** - What problem does this solve for them?
-- **"Does this provide value to the user?"** - What tangible benefit do they get?
+- **"Does this provide value to the user?"** - What tangible benefit do they
+  get?
 
-These are two sides of the same coin. spEARS projects emphasize incremental user-facing value over technical concerns.
+These are two sides of the same coin. spEARS projects emphasize incremental
+user-facing value over technical concerns.
 
 **Good Rationale (User Value Focused):**
 
@@ -269,7 +281,7 @@ responsive interaction. WGS84 is the standard coordinate system."
 
 ## File Structure
 
-```
+```text
 ProjectName/
 ├── specs/
 │   ├── feature-one/
@@ -284,7 +296,8 @@ ProjectName/
 └── README.md
 ```
 
-Even simple projects should identify their initial feature and create a spec for it. This maintains consistency and makes it easy to add more features later.
+Even simple projects should identify their initial feature and create a spec for
+it. This maintains consistency and makes it easy to add more features later.
 
 ### Naming Conventions
 
@@ -344,11 +357,17 @@ THE SYSTEM SHALL [behavior]
 
 **Purpose:** design.md serves two critical roles:
 
-1. **During planning:** Technical design document where architecture decisions are made and agreed upon BEFORE implementation begins. This is where the team discusses approaches, trade-offs, and reaches consensus.
+1. **During planning:** Technical design document where architecture decisions
+   are made and agreed upon BEFORE implementation begins. This is where the team
+   discusses approaches, trade-offs, and reaches consensus.
 
-2. **During/after implementation:** Living documentation that reflects the actual system. Updated as implementation reveals new insights or requirements evolve.
+2. **During/after implementation:** Living documentation that reflects the
+   actual system. Updated as implementation reveals new insights or requirements
+   evolve.
 
-**Key principle:** Implementation should follow design, not the other way around. Write design.md first, get team agreement, then implement. Update design.md when reality diverges from plan.
+**Key principle:** Implementation should follow design, not the other way
+around. Write design.md first, get team agreement, then implement. Update
+design.md when reality diverges from plan.
 
 ```markdown
 # [Feature Name] - Technical Design
@@ -391,7 +410,8 @@ THE SYSTEM SHALL [behavior]
 
 ### executive.md Template
 
-**Purpose:** Authoritative status tracking. Target persona: busy technical leader who wants essential facts.
+**Purpose:** Authoritative status tracking. Target persona: busy technical
+leader who wants essential facts.
 
 ```markdown
 # [Feature Name] - Executive Summary
@@ -522,7 +542,7 @@ rg "REQ-RL-001"
 
 Expected output:
 
-```
+```text
 specs/rate-limiting/requirements.md
 22:### REQ-RL-001: Prevent Abuse Attacks
 
@@ -549,7 +569,7 @@ rg "^### REQ-" specs/rate-limiting/requirements.md
 
 For each requirement:
 
-```
+```text
 REQ-RL-001
   ├── requirements.md (definition)
   ├── design.md (implementation approach)
@@ -611,23 +631,32 @@ Footer displays `window.__GIT_SHA__` injected at build time. Falls back to "unkn
 
 ### Q: Do I need specs for bug fixes?
 
-**A:** Usually no. For simple bugs: fix, add regression test, reference issue in commit. For bugs revealing missing requirements: add requirement, write test, implement fix.
+**A:** Usually no. For simple bugs: fix, add regression test, reference issue in
+commit. For bugs revealing missing requirements: add requirement, write test,
+implement fix.
 
 ### Q: When do I create a new spec vs add to existing?
 
-**A:** Create new when feature is logically independent. Add to existing when it extends current capability or shares architecture.
+**A:** Create new when feature is logically independent. Add to existing when it
+extends current capability or shares architecture.
 
 ### Q: What if requirements change frequently?
 
-**A:** EARS handles change well. Add new requirements with new IDs. Update existing statements (git shows history). Deprecate obsolete requirements (don't delete). Immutable IDs provide stability.
+**A:** EARS handles change well. Add new requirements with new IDs. Update
+existing statements (git shows history). Deprecate obsolete requirements (don't
+delete). Immutable IDs provide stability.
 
 ### Q: Isn't this overhead?
 
-**A:** Upfront cost, long-term savings. 15-30 minutes to write requirements saves hours debugging unclear requirements, days refactoring untested code, weeks onboarding developers.
+**A:** Upfront cost, long-term savings. 15-30 minutes to write requirements
+saves hours debugging unclear requirements, days refactoring untested code,
+weeks onboarding developers.
 
 ### Q: How detailed should EARS statements be?
 
-**A:** Detailed enough to implement clearly. If multiple interpretations possible → too vague. If describes implementation → too detailed. Good test: Can someone else implement from requirements alone?
+**A:** Detailed enough to implement clearly. If multiple interpretations
+possible → too vague. If describes implementation → too detailed. Good test: Can
+someone else implement from requirements alone?
 
 ### Q: Can requirements reference other requirements?
 
