@@ -9,7 +9,7 @@ spEARS methodology. For full methodology details, see [SPEARS.md](./SPEARS.md).
 specs/feature-name/
 ├── requirements.md   # WHAT (EARS format, immutable IDs, NO status)
 ├── design.md         # HOW (architecture, living document)
-└── executive.md      # STATUS (authoritative, NO code snippets)
+└── executive.md      # STATUS (authoritative, NO code blocks)
 ```
 
 ## When to Create Specs
@@ -116,9 +116,13 @@ around.
 **STRICT RULES:**
 
 - 250 words max per summary
-- ZERO code snippets (no exceptions)
+- ZERO code blocks (no exceptions)
 - NO fluff ("tests run on every PR", etc.)
 - Include requirement titles in table
+
+**Inline backticks ARE allowed** for technical terms (`config.yaml`), file paths
+(`src/auth.ts`), and requirement IDs (`REQ-XX-001`). Only code blocks are
+prohibited.
 
 ---
 
@@ -395,17 +399,25 @@ THE SYSTEM SHALL update displayed activity within 500ms
 
 Status belongs ONLY in executive.md.
 
-**NEVER: Code snippets in executive.md**
+**NEVER: Code blocks in executive.md**
 
 ```markdown
 ❌ ## Technical Summary
-Uses `RateLimiter::check()` to enforce limits:
+Rate limiting enforces request quotas:
 \`\`\`rust
 pub fn check(&self, ip: &str) -> Result<()>
 \`\`\`
 ```
 
-ZERO code in executive.md. No exceptions. Not even one-liners.
+ZERO code blocks in executive.md. No exceptions. Not even one-liners.
+
+Note: Inline backticks ARE allowed. This is fine:
+
+```markdown
+✅ ## Technical Summary
+Rate limiting uses `RateLimiter` to enforce per-IP quotas. Configuration in
+`config/limits.yaml`. See `src/middleware/rate_limit.rs` for implementation.
+```
 
 **NEVER: Implementation details in requirements.md**
 
@@ -512,7 +524,7 @@ rg "// REQ-" src/
 - Keep IDs immutable
 - Update executive.md as work progresses
 - Use git history for evolution tracking
-- Keep executive.md concise (no code)
+- Keep executive.md concise (no code blocks)
 
 ### DON'T
 
@@ -522,7 +534,7 @@ rg "// REQ-" src/
 - Document aspirational features in requirements.md
 - Create specs for trivial changes
 - Let specs become stale
-- Include code snippets in executive.md
+- Include code blocks in executive.md
 - Add fluff to summaries
 
 ---

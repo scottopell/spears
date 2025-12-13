@@ -100,7 +100,7 @@ specs/feature-name/
 |----------|----------|----------------|
 | **requirements.md** | EARS requirements, rationale, user stories | Status, implementation details, test coverage |
 | **design.md** | Architecture, data models, API contracts, file locations | Status, requirement definitions |
-| **executive.md** | Status table, summaries, verification coverage | Code snippets, detailed requirements |
+| **executive.md** | Status table, summaries, verification coverage | Code blocks, detailed requirements |
 
 ## EARS Format Guide
 
@@ -447,9 +447,18 @@ leader who wants essential facts.
 **Key Principles:**
 
 - 250 words max for each summary
-- NO code snippets (zero tolerance)
+- NO code blocks (zero tolerance for triple-backtick code)
 - NO fluff
 - Include requirement titles in table
+
+**Code in executive.md - What's Allowed:**
+
+| Allowed | Prohibited |
+|---------|------------|
+| Inline backticks for technical terms (`config.yaml`, `REQ-XX-001`) | Code blocks (triple backticks) |
+| File paths (`src/auth/login.ts`) | Multi-line code examples |
+| Environment variables (`$API_KEY`) | Function/method implementations |
+| Configuration keys | Pseudocode or algorithms |
 
 ## Workflow
 
