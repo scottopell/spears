@@ -42,11 +42,11 @@ captures:
 
 ## Output Format
 
-After your reflection, emit the continuation prompt directly to the clipboard:
+After your reflection, output the continuation prompt in a fenced code block:
 
-```bash
-echo '<your continuation prompt here>' | pbcopy
+```
+<your continuation prompt here>
 ```
 
 The continuation prompt should be immediately usable to resume work in a fresh
-Claude Code context.
+Claude Code context. The user will copy it manually.
