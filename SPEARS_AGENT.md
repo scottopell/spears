@@ -8,9 +8,18 @@ spEARS methodology. For full methodology details, see [SPEARS.md](./SPEARS.md).
 ```text
 specs/feature-name/
 ├── requirements.md   # WHAT (EARS format, immutable IDs, NO status)
-├── design.md         # HOW (architecture, living document)
-└── executive.md      # STATUS (authoritative, NO code blocks)
+├── design.md         # HOW (architecture, must trace to REQ-*)
+└── executive.md      # STATUS (temporal link, NO code blocks)
 ```
+
+### The Temporal Model
+
+- **requirements.md**: Timeless. Unimplemented requirements (❌ status) are
+  valid scope - just not built yet.
+- **design.md**: Slightly ahead of reality. Describes HOW to build requirements.
+  All content must trace to a REQ-*.
+- **executive.md**: The temporal link. ONLY document that must reflect current
+  reality.
 
 ## When to Create Specs
 
@@ -144,6 +153,7 @@ prohibited.
 - Specify data models, API contracts, component interactions
 - Discuss trade-offs with team
 - Get agreement on technical approach
+- **All content must trace to a REQ-* in requirements.md**
 
 **WHY:** Clear requirements + agreed design makes TDD powerful. You know exactly
 what to test because the expected behavior is unambiguous.
@@ -384,6 +394,40 @@ THE SYSTEM SHALL complete within 500ms using geohash prefix queries
 THE SYSTEM SHALL update displayed activity within 500ms
 ```
 
+### Orphaned Content in design.md (MOST CRITICAL)
+
+Content in design.md that cannot trace to a REQ-* in requirements.md is a
+violation. This is how specs become roadmaps for undefined work.
+
+**Bad: Future considerations without requirements**
+
+```markdown
+❌ ## Future Considerations
+We could later add support for batch processing...
+
+❌ ## Phase 2 Enhancements
+In the next iteration, we'll implement caching...
+
+❌ ## Extensibility
+The architecture supports future OAuth providers...
+```
+
+**Good: All content traces to requirements**
+
+```markdown
+✅ ## REQ-RL-001 Implementation
+Rate limiting uses sliding window algorithm...
+
+✅ ## REQ-RL-002 Implementation
+Quota display shows remaining requests...
+
+✅ ## Architecture Overview
+Components implementing REQ-RL-001 through REQ-RL-003...
+```
+
+**The test:** Can you annotate every section of design.md with the REQ-* it
+supports? If not, that content belongs in an issue tracker.
+
 ### Wrong Document Location (ENFORCE STRICTLY)
 
 **This is a core principle. Violations corrupt the entire system.**
@@ -531,11 +575,22 @@ rg "// REQ-" src/
 - Write vague requirements ("fast", "good UX")
 - Reuse requirement IDs
 - Add status to requirements.md
-- Document aspirational features in requirements.md
+- Include content in design.md without a corresponding REQ-*
 - Create specs for trivial changes
 - Let specs become stale
 - Include code blocks in executive.md
 - Add fluff to summaries
+
+### Unimplemented vs Undefined (Critical Distinction)
+
+**Unimplemented requirements** = REQ-* entries in requirements.md with ❌ status
+in executive.md. These are legitimate scope, just not built yet. Design.md CAN
+and SHOULD describe how to build them.
+
+**Undefined features** = Content describing capabilities without a corresponding
+REQ-* anywhere. This is scope creep. It belongs in an issue tracker, not the
+spec. This includes "Future Considerations" sections, "Phase 2" plans, or
+speculative extensibility.
 
 ---
 

@@ -27,7 +27,9 @@ captures:
 
 ## Guidelines
 
-- **Trust `specs/**/ *.md`** as the authoritative source of truth over all other
+- **Trust `specs/**/executive.md`** as the temporal link - it reflects current
+  reality and where each spec is in its development journey
+- **Trust `specs/**/*.md`** as the authoritative source of truth over all other
   documentation
 - Reference **spEARS requirements** (EARS IDs) as the primary unit of work when
   applicable

@@ -99,8 +99,28 @@ specs/feature-name/
 | Document | Contains | Never Contains |
 |----------|----------|----------------|
 | **requirements.md** | EARS requirements, rationale, user stories | Status, implementation details, test coverage |
-| **design.md** | Architecture, data models, API contracts, file locations | Status, requirement definitions |
+| **design.md** | Architecture, data models, API contracts, file locations | Status, requirement definitions, features without REQ-* |
 | **executive.md** | Status table, summaries, verification coverage | Code blocks, detailed requirements |
+
+### The Temporal Model
+
+The three documents have different relationships with time:
+
+- **requirements.md**: Timeless definitions. Requirements exist before
+  implementation. An unimplemented requirement (❌ status) is still a valid,
+  in-scope requirement - it's just not built yet.
+
+- **design.md**: Can be slightly ahead of reality. Describes HOW to build
+  requirements. May document the approach for not-yet-implemented requirements.
+  **Critical rule:** All content must trace to a REQ-* in requirements.md.
+  Content without a corresponding requirement is scope creep and belongs in an
+  issue tracker.
+
+- **executive.md**: The temporal link. The ONLY document that must reflect
+  current reality. Tracks where the spec is in its development journey:
+  - At 0%: "Nothing implemented, here's what's planned"
+  - At 50%: "ABC complete, XYZ is next"
+  - At 100%: A summary of the complete feature
 
 ## EARS Format Guide
 
@@ -368,6 +388,12 @@ THE SYSTEM SHALL [behavior]
 **Key principle:** Implementation should follow design, not the other way
 around. Write design.md first, get team agreement, then implement. Update
 design.md when reality diverges from plan.
+
+**Traceability rule:** Every section in design.md must trace to a requirement in
+requirements.md. If you find yourself writing about features or capabilities
+that don't have a REQ-* identifier, that content belongs in an issue tracker,
+not the spec. This prevents design.md from becoming a roadmap for undefined
+work.
 
 ```markdown
 # [Feature Name] - Technical Design

@@ -19,9 +19,16 @@ You understand the strict separation of concerns and quality standards.
 ```text
 specs/feature-name/
 ├── requirements.md   # WHAT (EARS format, immutable IDs, NO status)
-├── design.md         # HOW (architecture, living document)
-└── executive.md      # STATUS (authoritative, NO code snippets)
+├── design.md         # HOW (architecture, must trace to REQ-*)
+└── executive.md      # STATUS (temporal link, NO code blocks)
 ```
+
+### The Temporal Model
+
+- **requirements.md**: Timeless. Unimplemented requirements (❌ status) are
+  valid scope.
+- **design.md**: Slightly ahead of reality. All content must trace to a REQ-*.
+- **executive.md**: The temporal link. ONLY document reflecting current reality.
 
 ### requirements.md Rules
 
@@ -37,8 +44,10 @@ specs/feature-name/
 
 - Written BEFORE implementation, updated during
 - Architecture overview, data models, API contracts
+- **All content must trace to a REQ-* in requirements.md**
 - NO requirement definitions (belongs in requirements.md)
 - NO status tracking (belongs in executive.md)
+- NO "Future Considerations" or content without corresponding requirements
 - Must be self-contained (no "as before" or "improved" without specifics)
 
 ### executive.md Rules
@@ -77,6 +86,13 @@ specs/feature-name/
 - [ ] No time-dependent references ("as before", "previously")
 - [ ] No comparative language requiring prior knowledge
 - [ ] Document understandable standalone
+
+### Scope Check (design.md)
+
+- [ ] Every section traces to a REQ-* in requirements.md
+- [ ] No "Future Considerations" or "Phase 2" sections
+- [ ] No speculative extensibility without corresponding requirements
+- [ ] Content describes HOW to build defined requirements only
 
 ### BANNED PHRASES (rewrite immediately)
 
@@ -125,6 +141,8 @@ specs/feature-name/
 - Requirement title ending in "-ing" (processing, caching)
 - Vague requirements ("fast", "good UX", "handle errors gracefully")
 - Rationale mentioning database, cache, algorithm
+- design.md content without corresponding REQ-* (orphaned scope)
+- "Future Considerations" or "Phase 2" sections in design.md
 
 ## Green Flags (Good Signs)
 
