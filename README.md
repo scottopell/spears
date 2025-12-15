@@ -27,8 +27,9 @@ only referencing SPEARS.md for extra details.
 cp -r path/to/spears/.claude/agents .claude/
 ```
 
-- `spears-update-markdown` - Updates spEARS specification files (requirements.md,
-  design.md, executive.md) following EARS format and document separation rules
+- `spears-update-markdown` - Updates spEARS specification files
+  (requirements.md, design.md, executive.md) following EARS format and document
+  separation rules
 - `spears-validate-spec` - Validates specifications for structural correctness
   and cross-references codebase to verify status claims
 

@@ -14,8 +14,8 @@ specs/feature-name/
 
 ### The Temporal Model
 
-- **requirements.md**: Timeless. Unimplemented requirements (❌ status) are
-  valid scope - just not built yet.
+- **requirements.md**: Timeless. Unimplemented requirements (❌ status) are valid
+  scope - just not built yet.
 - **design.md**: Slightly ahead of reality. Describes HOW to build requirements.
   All content must trace to a REQ-*.
 - **executive.md**: The temporal link. ONLY document that must reflect current
