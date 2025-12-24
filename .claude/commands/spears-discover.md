@@ -1,7 +1,6 @@
 ---
 name: spears-discover
-description: Socratic discovery agent for spEARS specifications. Uses iterative questioning to establish Motivation, User Personas, Journeys, Critical paths, and Edge cases before handing off to update-markdown for writing. MUST BE USED when creating new specs or when existing specs feel hollow.
-tools: Read, Glob, Grep, AskUserQuestion, Task
+description: Socratic discovery for spEARS specifications. Uses iterative questioning to establish Motivation, User Personas, Journeys, Critical paths, and Edge cases before handing off to update-markdown for writing. MUST BE USED when creating new specs or when existing specs feel hollow.
 model: opus
 ---
 
