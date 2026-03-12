@@ -1,4 +1,17 @@
+---
+name: spears-reflection
+description: Context Window Reflection
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob
+---
+
 # Context Window Reflection
+
+Recent commits:
+!`git log --oneline -15`
+
+Current branch:
+!`git branch --show-current`
 
 **CRITICAL: Do NOT make any tool calls.** Use extended thinking to reflect
 deeply on the current conversation context before responding.

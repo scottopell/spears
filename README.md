@@ -21,23 +21,31 @@ Add a reference to them in your project's `CLAUDE.md` or `AGENTS.md`. I
 recommend putting an @-reference to automatically include SPEARS_AGENT.md and
 only referencing SPEARS.md for extra details.
 
-### Optional: Claude Code Agents
+### Optional: Claude Code Skills
+
+Install globally (available in all projects):
 
 ```bash
-cp -r path/to/spears/.claude/agents .claude/
+cp -r path/to/spears/.claude/skills/* ~/.claude/skills/
 ```
 
-- `spears-update-markdown` - Updates spEARS specification files
+Or install per-project:
+
+```bash
+cp -r path/to/spears/.claude/skills .claude/skills
+```
+
+Available skills:
+
+- `/spears-discover` - Socratic discovery for new specs. Iterative questioning
+  to establish motivation, personas, journeys, critical paths, and edge cases
+  before writing.
+- `/spears-reflection` - End-of-session reflection that captures progress,
+  current state, and next steps as a continuation prompt.
+- `/spears-update-markdown` - Updates spEARS specification files
   (requirements.md, design.md, executive.md) following EARS format and document
-  separation rules
-- `spears-validate-spec` - Validates specifications for structural correctness
-  and cross-references codebase to verify status claims
-
-### Optional: Claude Code Commands
-
-```bash
-cp -r path/to/spears/.claude/commands .claude/
-```
-
-- `/spears-reflection` - End-of-session command that reflects on progress,
-  captures next steps, and outputs a continuation prompt to clipboard
+  separation rules.
+- `/spears-validate-spec` - Validates specifications for structural correctness
+  and cross-references codebase to verify status claims.
+- `/spears-implement` - Implements requirements following design.md. Accepts
+  requirement IDs or spec paths. Tracks status in executive.md.
