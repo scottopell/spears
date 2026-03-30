@@ -1,5 +1,8 @@
 ---
 name: spears
+metadata:
+  author: scottopell
+  version: "1.0.0"
 description: >
   spEARS (Simple Project with EARS) methodology for requirements-driven development.
   Provides Socratic discovery of user needs, EARS-formatted specification writing,
