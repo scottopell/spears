@@ -1,43 +1,65 @@
 # spEARS
 
-spEARS (Simple Project with EARS) is a lightweight methodology for working with
-AI coding agents. It provides structured prompts and rules that help agents
-understand project context, track progress, and maintain consistency across
-sessions. The approach emphasizes root cause analysis and reflection over quick
-fixes.
+spEARS (Simple Project with EARS) is a requirements-driven methodology for
+working with AI coding agents.
+It provides explicit traceability from business requirements to tests to code
+using a strict three-document pattern (requirements.md, design.md, executive.md)
+and EARS (Easy Approach to Requirements Syntax) format.
 
-- [Methodology](SPEARS.md)
-- [Agent Rules](SPEARS_AGENT.md)
-
-## Installation
-
-Copy `SPEARS.md` and `SPEARS_AGENT.md` into your project's root directory:
+## Install
 
 ```bash
-cp path/to/spears/SPEARS.md path/to/spears/SPEARS_AGENT.md .
+npx skills add scottopell/spears
 ```
 
-Add a reference to them in your project's `CLAUDE.md` or `AGENTS.md`. I
-recommend putting an @-reference to automatically include SPEARS_AGENT.md and
-only referencing SPEARS.md for extra details.
+This installs the `spears` skill into your project’s `.agents/skills/`
+directory.
 
-### Optional: Claude Code Agents
+## What It Does
 
-```bash
-cp -r path/to/spears/.claude/agents .claude/
+The skill provides six workflows, selected automatically based on context:
+
+| Workflow | When it triggers |
+| --- | --- |
+| **Discover** | New feature, vague idea, “I want to build X” |
+| **Write Specs** | Creating or updating requirements, design, or executive docs |
+| **Implement** | Building from existing specs |
+| **Validate** | Checking spec accuracy against the codebase |
+| **Lint** | Enforcing quality rules, fixing violations |
+| **Reflect** | End-of-session continuation prompt |
+
+Discovery is the default entry point when intent is unclear -- it uses Socratic
+questioning to understand user needs before writing anything.
+
+## The Three-Document System
+
+Every feature gets a spec directory with three files:
+
+```
+specs/feature-name/
+  requirements.md   # WHAT to build (EARS format, immutable IDs)
+  design.md         # HOW to build it (architecture, trade-offs)
+  executive.md      # WHERE we are (status, milestones, progress)
 ```
 
-- `spears-update-markdown` - Updates spEARS specification files
-  (requirements.md, design.md, executive.md) following EARS format and document
-  separation rules
-- `spears-validate-spec` - Validates specifications for structural correctness
-  and cross-references codebase to verify status claims
+Each document has a different relationship with time:
+- **requirements.md** is timeless (defines the ideal end state)
+- **design.md** is slightly ahead of reality (describes the technical approach)
+- **executive.md** is the temporal link (reflects current reality)
 
-### Optional: Claude Code Commands
+## Key Principles
 
-```bash
-cp -r path/to/spears/.claude/commands .claude/
-```
+- **Specs without traceable user journeys are hollow.** Every requirement must
+  trace to a real user doing a real thing.
+- **Self-containment.** Every doc must be understandable without external
+  context. No “as before”, no “unlike the old approach.”
+- **Design describes architecture, not schedule.** Phasing decisions ("start
+  with X, add Y later") belong in executive.md.
+- **Requirements describe the ideal end state.** No migration concerns, no
+  backwards compatibility, no implementation technology.
+- **YAGNI.** Only implement what’s in requirements.md.
 
-- `/spears-reflection` - End-of-session command that reflects on progress,
-  captures next steps, and outputs a continuation prompt to clipboard
+## Links
+
+- [EARS Whitepaper (Rolls-Royce)](https://www.researchgate.net/publication/224079416_Easy_Approach_to_Requirements_Syntax_EARS)
+- [skills.sh](https://skills.sh)

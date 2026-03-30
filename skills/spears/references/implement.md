@@ -1,21 +1,25 @@
 # spEARS Implementation Workflow
 
-This workflow guides implementing requirements from completed specs. The correct
-order is always: Requirements -> Design -> Tests -> Implementation.
+This workflow guides implementing requirements from completed specs.
+The correct order is always: Requirements -> Design -> Tests -> Implementation.
 
 ## Core Principles
 
-1. **YAGNI**: Only implement what's in requirements.md. No extras.
-2. **Follow Design**: design.md is the implementation guide. Don't invent.
-3. **Verify Tests**: Requirements aren't complete until tests pass.
+1. **YAGNI**: Only implement what’s in requirements.md.
+   No extras.
+2. **Follow Design**: design.md is the implementation guide.
+   Don’t invent.
+3. **Verify Tests**: Requirements aren’t complete until tests pass.
 4. **Track Status**: executive.md must reflect current reality.
 
 ## Input Handling
 
 Accept either:
 
-- **Requirement IDs**: `REQ-RL-001`, `REQ-RL-002` -- implement specific requirements
-- **Spec paths**: `specs/rate-limiting` -- implement all non-complete requirements
+- **Requirement IDs**: `REQ-RL-001`, `REQ-RL-002` -- implement specific
+  requirements
+- **Spec paths**: `specs/rate-limiting` -- implement all non-complete
+  requirements
 
 When given requirement IDs, locate the containing spec directory first.
 
@@ -50,10 +54,11 @@ Edit executive.md: ❌ -> 🔄
 
 ### 2. Follow design.md
 
-Read the implementation guidance. The design specifies architecture approach,
-data models, API contracts, and error handling.
+Read the implementation guidance.
+The design specifies architecture approach, data models, API contracts, and
+error handling.
 
-If design.md doesn't specify something you need to decide: do NOT guess.
+If design.md doesn’t specify something you need to decide: do NOT guess.
 Ask the user for direction.
 
 ### 3. Write Implementation
@@ -65,13 +70,13 @@ Ask the user for direction.
 ### 4. Write/Update Tests
 
 - Add `@requirement REQ-XX-###` or `// REQ-XX-###` tags
-- Tests should verify the EARS "SHALL" clauses
+- Tests should verify the EARS “SHALL” clauses
 - Cover success paths AND error conditions from requirements
 
 ### 5. Run Tests
 
-Execute the project's test suite. Adapt to whatever test runner the project
-uses.
+Execute the project’s test suite.
+Adapt to whatever test runner the project uses.
 
 ### 6. Update Status
 
@@ -84,17 +89,17 @@ If tests fail: fix the implementation, re-run, only mark complete when passing.
 Do NOT implement:
 
 - Features not in requirements.md (even if they seem useful)
-- "Future-proofing" abstractions not required by current requirements
+- “Future-proofing” abstractions not required by current requirements
 - Extra configuration options beyond what requirements specify
 - Additional error handling beyond what requirements specify
 
-**Stop signals** -- if you catch yourself thinking any of these, check whether
-a requirement actually asks for it:
+**Stop signals** -- if you catch yourself thinking any of these, check whether a
+requirement actually asks for it:
 
-- "While I'm here, I'll also..."
-- "It would be nice to also..."
-- "For extensibility, let me add..."
-- "In case we need it later..."
+- “While I’m here, I’ll also …”
+- “It would be nice to also …”
+- “For extensibility, let me add …”
+- “In case we need it later …”
 
 ## Design Gap Protocol
 
@@ -110,8 +115,8 @@ When design.md lacks detail for a decision:
 
 If implementation reveals a design flaw:
 
-1. STOP -- don't work around it
-2. Report: "design.md specifies X, but this conflicts with Y"
+1. STOP -- don’t work around it
+2. Report: “design.md specifies X, but this conflicts with Y”
 3. Ask the user how to proceed
 4. Typical options: update design.md then continue, or pause and revisit
 
@@ -124,7 +129,7 @@ A requirement is ✅ Complete when:
 - Tests exist with requirement tags
 - All tests pass
 - executive.md updated to ✅
-- No un-spec'd features were added
+- No un-spec’d features were added
 
 ## Progress Reporting
 

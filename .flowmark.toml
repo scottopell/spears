@@ -1,0 +1,8 @@
+[formatting]
+width = 80
+semantic = true
+smartquotes = false
+ellipses = true
+
+[file-discovery]
+extend-exclude = ["node_modules/", ".venv/", "*.min.js"]

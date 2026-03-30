@@ -5,25 +5,26 @@ that captures progress and enables seamless pickup in a fresh context.
 
 ## When to Use
 
-- Context window is getting long and work isn't finished
+- Context window is getting long and work isn’t finished
 - User asks for a summary or handoff prompt
 - Ending a session with outstanding work
 
 ## Process
 
-Do NOT make tool calls. Use extended thinking to reflect on the conversation,
-then produce a continuation prompt.
+Do NOT make tool calls.
+Use extended thinking to reflect on the conversation, then produce a
+continuation prompt.
 
 ## What to Capture
 
-1. **Progress Made**: Where are we relative to any phased plan or roadmap? If no
-   explicit phases exist, summarize progress against requirements.
+1. **Progress Made**: Where are we relative to any phased plan or roadmap?
+   If no explicit phases exist, summarize progress against requirements.
 
 2. **Current State**: What was actively being worked on when the session is
    ending?
 
-3. **Next Steps**: What should be picked up next? Be specific about which
-   requirements or tasks remain.
+3. **Next Steps**: What should be picked up next?
+   Be specific about which requirements or tasks remain.
 
 4. **Worth Following Up On**: Anything noticed during this session that deserves
    attention:
@@ -42,7 +43,7 @@ then produce a continuation prompt.
 - Keep the continuation prompt minimal on context -- important info is already
   in the spec documents
 - Focus on key insights specific to this session, not general project background
-- The prompt should clearly lay out what's next and help the next context pick
+- The prompt should clearly lay out what’s next and help the next context pick
   up seamlessly
 
 ## Output Format
@@ -54,4 +55,5 @@ After reflection, output the continuation prompt in a fenced code block:
 ```
 
 The continuation prompt should be immediately usable to resume work in a fresh
-Claude Code context. The user will copy it manually.
+Claude Code context.
+The user will copy it manually.

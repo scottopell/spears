@@ -7,7 +7,7 @@ executive.md accuracy and design.md scope integrity.
 
 Accept either:
 - A specific spec path (e.g., `specs/my-feature`) -- validate that single spec
-- No path or "all" -- validate all specs in the project
+- No path or “all” -- validate all specs in the project
 
 For multiple specs, validate each one and aggregate findings.
 
@@ -21,15 +21,16 @@ For multiple specs, validate each one and aggregate findings.
 - [ ] NO status fields
 - [ ] NO implementation details
 - [ ] Titles describe USER BENEFITS
-- [ ] Rationale answers "Why does the USER care?"
+- [ ] Rationale answers “Why does the USER care?”
 - [ ] No references to current system state or migration concerns
 
 **design.md:**
 - [ ] All content traces to a REQ-* in requirements.md
 - [ ] NO requirement definitions
 - [ ] NO status tracking
-- [ ] NO "Future Considerations" or "Phase 2" sections
-- [ ] Self-contained (no "as before", "improved", "previously" without specifics)
+- [ ] NO “Future Considerations” or “Phase 2” sections
+- [ ] Self-contained (no “as before”, “improved”, “previously” without
+  specifics)
 - [ ] No comparative language referencing unstated baselines
 
 **executive.md:**
@@ -41,7 +42,8 @@ For multiple specs, validate each one and aggregate findings.
 
 ### 2. Executive.md Accuracy (Cross-Reference)
 
-Executive.md is the ONLY document that must reflect current reality. Verify:
+Executive.md is the ONLY document that must reflect current reality.
+Verify:
 
 **Status Claims:**
 - For ✅ Complete: check that implementation files exist, look for test files
@@ -53,8 +55,8 @@ Executive.md is the ONLY document that must reflect current reality. Verify:
 - If executive.md or design.md mentions specific file paths, verify they exist
 
 **Summary Accuracy:**
-- Requirements Summary should match what's in requirements.md
-- Technical Summary should match what's in design.md
+- Requirements Summary should match what’s in requirements.md
+- Technical Summary should match what’s in design.md
 
 ### 3. Design.md Scope Check
 
@@ -64,9 +66,9 @@ requirement in requirements.md.
 **How to detect:**
 1. Extract all requirement IDs from requirements.md
 2. Scan design.md for:
-   - Sections like "Future Considerations", "Phase 2", "Planned Enhancements"
+   - Sections like “Future Considerations”, “Phase 2”, “Planned Enhancements”
    - References to capabilities not tied to a REQ-* ID
-   - Language like "we could later add", "future versions might"
+   - Language like “we could later add”, “future versions might”
 
 **Important distinction:**
 - Unimplemented requirements (in requirements.md with ❌ status) are FINE
@@ -75,11 +77,11 @@ requirement in requirements.md.
 ### 4. Self-Containment Audit
 
 Scan all three documents for banned phrases and comparative language:
-- "as before" / "as currently implemented" / "previously"
-- "maintain existing behavior" / "unlike the old approach"
-- "the improved version" / "better than before"
-- "standard validation rules" / "default timeout values"
-- "backwards compatible" / "migration from current"
+- “as before” / “as currently implemented” / “previously”
+- “maintain existing behavior” / “unlike the old approach”
+- “the improved version” / “better than before”
+- “standard validation rules” / “default timeout values”
+- “backwards compatible” / “migration from current”
 
 Flag each occurrence with the specific line and a suggested rewrite.
 
