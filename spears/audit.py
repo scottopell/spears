@@ -73,9 +73,9 @@ def audit(
     spec_filter:
         If given, only audit specs whose directory name is in this list.
     all_statuses:
-        If True, report every declared REQ that is unanchored, regardless of
-        status. Equivalent to passing ``statuses={complete, in-progress,
-        planned, not-started, manual, unknown}``.
+        If True, report every declared REQ that is unanchored, regardless
+        of status. Equivalent to passing ``statuses=ALL_STATUSES`` (which
+        includes ``n-a`` and ``unknown``).
     statuses:
         Explicit status filter. Defaults to ``{"complete"}`` -- the genuine
         ``spec lies about implementation`` subset.

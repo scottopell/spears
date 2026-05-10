@@ -83,6 +83,11 @@ def _parse_status_arg(value: str | None) -> set[str] | None:
     if not value:
         return None
     tokens = {s.strip().lower() for s in value.split(",") if s.strip()}
+    if not tokens:
+        raise UsageError(
+            "--status given with no usable tokens (only whitespace/commas). "
+            f"Allowed: {','.join(sorted(ALL_STATUSES))}"
+        )
     unknown = tokens - ALL_STATUSES
     if unknown:
         raise UsageError(

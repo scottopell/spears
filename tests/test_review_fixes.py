@@ -82,6 +82,23 @@ def test_parse_status_arg_none_for_empty_or_missing():
     assert _parse_status_arg("") is None
 
 
+def test_parse_status_arg_rejects_whitespace_or_comma_only():
+    # PR #5 r3214892218: --status '   ' or ',' silently disabled reporting.
+    with pytest.raises(UsageError):
+        _parse_status_arg("   ")
+    with pytest.raises(UsageError):
+        _parse_status_arg(",")
+    with pytest.raises(UsageError):
+        _parse_status_arg(" , , ")
+
+
+def test_all_statuses_constant_includes_n_a():
+    # PR #5 r3214892213: docstring previously omitted n-a. The constant is
+    # now the source of truth referenced by both audit and the CLI; pin it.
+    assert "n-a" in ALL_STATUSES
+    assert "unknown" in ALL_STATUSES
+
+
 def test_audit_command_rejects_unknown_status_with_exit_code_2(capsys):
     rc = main(["audit", "--status", "nonsense", "--root", "."])
     captured = capsys.readouterr()
