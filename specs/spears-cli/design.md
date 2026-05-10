@@ -63,8 +63,11 @@ the linter; only the SKILL's explicit anti-patterns trigger a flag.
 ### R2 (rationale presence, REQ-SC-004)
 
 Each REQ section in requirements.md spans from its `### REQ-...:` heading
-to the next heading at any level. A section satisfies R2 when at least
-one line within it matches `^\s*\*\*Rationale\s*:?\*\*` (case-insensitive).
+to the next heading of level 1, 2, or 3 (`#`, `##`, or `###`). Subheadings
+of level 4 or deeper (`####`, `#####`) stay inside the section, so authors
+can sub-organise a REQ with `#### Acceptance Criteria` or similar without
+ending it. A section satisfies R2 when at least one line within it matches
+`^\s*\*\*Rationale\s*:?\*\*` (case-insensitive).
 
 ### R3 (status-table shape, REQ-SC-005)
 

@@ -16,7 +16,15 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from spears.parser import Spec, discover_specs
-from spears.scanner import Mention, find_mentions, is_anchor_path
+from spears.scanner import find_mentions, is_anchor_path
+
+
+# The full status vocabulary, including ``n-a`` for explicit "not applicable"
+# rows. Kept as a module-level constant so the CLI can validate user input
+# against the same set the audit uses.
+ALL_STATUSES: frozenset[str] = frozenset(
+    {"complete", "in-progress", "planned", "not-started", "manual", "n-a", "unknown"}
+)
 
 
 @dataclass
@@ -74,9 +82,7 @@ def audit(
     """
     if statuses is None:
         statuses = (
-            {"complete", "in-progress", "planned", "not-started", "manual", "unknown"}
-            if all_statuses
-            else {"complete"}
+            ALL_STATUSES if all_statuses else {"complete"}
         )
 
     specs = discover_specs(root)

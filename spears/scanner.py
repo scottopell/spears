@@ -111,7 +111,7 @@ def find_mentions(
     code-only anchors should filter with :func:`is_anchor_path`.
     """
     mentions: dict[str, list[Mention]] = defaultdict(list)
-    for path in iter_text_files(root):
+    for path in iter_text_files(root, prune_dirs=prune_dirs):
         try:
             with open(path, "r", encoding="utf-8", errors="replace") as f:
                 for lineno, line in enumerate(f, start=1):

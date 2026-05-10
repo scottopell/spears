@@ -111,7 +111,7 @@ def _check_title_verb(title: str) -> str | None:
     if GERUND_RE.match(first):
         return (
             f"title starts with gerund {first!r}; "
-            f"rewrite as imperative (e.g. {first[:-3]!r} or 'Use ...')"
+            f"rewrite as a user-action imperative"
         )
     if len(words) >= 2 and GERUND_RE.match(words[1]):
         return (
