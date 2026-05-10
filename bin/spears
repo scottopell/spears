@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+"""Shim for the spears CLI -- runs the package without installation."""
+import os
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+sys.path.insert(0, ROOT)
+
+from spears.cli import main  # noqa: E402
+
+raise SystemExit(main())

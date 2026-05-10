@@ -59,6 +59,68 @@ Each document has a different relationship with time:
   backwards compatibility, no implementation technology.
 - **YAGNI.** Only implement what’s in requirements.md.
 
+## CLI
+
+A small `spears` CLI ships alongside the skill for mechanical checks
+against your spec directory. It is stdlib-only Python (no runtime
+dependencies). Run it from your project root:
+
+```bash
+# audit -- catch ✅ Complete REQs that have no anchor in code
+python -m spears audit
+
+# lint -- check title quality, Rationale presence, table shape, transparency contract
+python -m spears lint
+```
+
+Or use the shim in `bin/spears` if you've cloned this repo directly.
+
+### `spears audit`
+
+Reads every spec under `<root>/specs/`, joins requirements.md headings
+with the executive.md status table, and reports REQ-ids whose status is
+✅ Complete but whose REQ-id never appears in any file outside `specs/`.
+Exit code is `1` if any such REQ is found, so the command can be wired
+into CI.
+
+```bash
+python -m spears audit                 # default: complete-only
+python -m spears audit --all-statuses  # widen for migration / audit work
+python -m spears audit --status complete,in-progress
+python -m spears audit --spec rate-limiting --spec auth
+```
+
+### `spears lint`
+
+Runs four rules:
+
+- **R1** REQ titles must read as user benefits, not features. Flags
+  gerund leading words, all-caps tech tokens, and noun-phrase titles.
+- **R2** Every REQ in requirements.md must have a `**Rationale:**` block.
+- **R3** Every status-table row must match the header's column count.
+- **R4** If executive.md has a `## Transparency Contract` section, every
+  declared REQ must have a question and every question must reference a
+  declared REQ. Skipped silently when the section is absent.
+
+### Performance
+
+The audit walks the project with `os.walk` and prunes noise directories
+(`.git`, `node_modules`, `__pycache__`, `dist`, `build`, `venv`, ...) in
+place. The v1 prototype this is based on runs in ~0.2s on the workload
+it was built for.
+
+### Tests
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
+Tests are split into property-based (Hypothesis) tests pinning round-trip
+and structural invariants for the parser, scanner, audit filter, and the
+two structural lint rules; and example-based tests against fixture
+projects in `tests/fixtures/`.
+
 ## Links
 
 - [EARS Whitepaper (Rolls-Royce)](https://www.researchgate.net/publication/224079416_Easy_Approach_to_Requirements_Syntax_EARS)
