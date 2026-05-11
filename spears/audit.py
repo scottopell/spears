@@ -159,7 +159,13 @@ def format_report(result: AuditResult, root: Path) -> str:
         lines.append("")
 
     if not result.findings:
-        lines.append("All targeted REQ declarations have anchors in code.")
+        if result.parse_errors:
+            lines.append(
+                "No unanchored findings, but the audit was incomplete: "
+                "see Parse warnings above."
+            )
+        else:
+            lines.append("All targeted REQ declarations have anchors in code.")
         return "\n".join(lines).rstrip() + "\n"
 
     by_spec: dict[str, list[AuditFinding]] = {}

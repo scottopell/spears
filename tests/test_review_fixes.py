@@ -13,8 +13,9 @@ from pathlib import Path
 
 import pytest
 
-from spears.audit import ALL_STATUSES, audit
+from spears.audit import ALL_STATUSES, audit, format_report as audit_format
 from spears.cli import UsageError, _parse_status_arg, main
+from spears.lint import lint, format_report as lint_format
 from spears.scanner import find_mentions
 
 
@@ -109,6 +110,77 @@ def test_audit_cli_rejects_both_flags(tmp_path, capsys):
     assert exc_info.value.code == 2
     captured = capsys.readouterr()
     assert "not allowed with" in captured.err or "argument" in captured.err
+
+
+def _spec_dir_missing(tmp_path: Path, missing: str) -> Path:
+    """Set up a spec dir with one of the three canonical files missing."""
+    spec = tmp_path / "specs" / "broken"
+    spec.mkdir(parents=True)
+    files = {
+        "requirements.md": "### REQ-BR-001: Test\n\n**Rationale:** Yes.\n",
+        "design.md": "# Design\n",
+        "executive.md": (
+            "# Exec\n\n## Status\n\n"
+            "| Req | Status |\n| --- | --- |\n"
+            "| **REQ-BR-001:** Test | ✅ Complete |\n"
+        ),
+    }
+    for name, body in files.items():
+        if name == missing:
+            continue
+        (spec / name).write_text(body, encoding="utf-8")
+    return tmp_path
+
+
+def test_audit_report_qualifies_success_when_parse_warnings_present(tmp_path):
+    # PR #5 r3218150436: missing executive.md means statuses can't be
+    # evaluated; a clean "all anchors" line would be misleading.
+    root = _spec_dir_missing(tmp_path, "executive.md")
+    # Anchor the REQ in code so findings stay empty.
+    (root / "src").mkdir()
+    (root / "src" / "anchor.py").write_text("# REQ-BR-001: anchor\n", encoding="utf-8")
+    result = audit(root=root)
+    assert result.parse_errors, "missing executive.md should produce a parse warning"
+    assert not result.findings
+    assert not result.ok  # parse warnings keep ok=False -> exit code 1
+    text = audit_format(result, root)
+    assert "Parse warnings" in text
+    assert "incomplete" in text
+    assert "All targeted REQ declarations have anchors in code." not in text
+
+
+def test_lint_propagates_parse_errors_into_result(tmp_path):
+    # PR #5 r3218150508: previously parse errors were dropped, so a missing
+    # requirements.md was silently reported as "No lint issues."
+    root = _spec_dir_missing(tmp_path, "requirements.md")
+    result = lint(root=root)
+    assert result.parse_errors, "missing requirements.md should produce a parse warning"
+    assert not result.ok
+    text = lint_format(result, root)
+    assert "Parse warnings" in text
+    assert "incomplete" in text
+    assert text.rstrip() != "No lint issues."
+
+
+def test_lint_clean_path_still_reports_no_issues(tmp_path):
+    # Regression guard: with no parse errors and no issues, the simple
+    # success line still wins.
+    spec = tmp_path / "specs" / "ok"
+    spec.mkdir(parents=True)
+    (spec / "requirements.md").write_text(
+        "### REQ-OK-001: View Status\n\n**Rationale:** Users care.\n",
+        encoding="utf-8",
+    )
+    (spec / "design.md").write_text("# Design\n", encoding="utf-8")
+    (spec / "executive.md").write_text(
+        "# Exec\n\n## Status\n\n"
+        "| Req | Status |\n| --- | --- |\n"
+        "| **REQ-OK-001:** View Status | ✅ Complete |\n",
+        encoding="utf-8",
+    )
+    result = lint(root=tmp_path)
+    assert result.ok
+    assert lint_format(result, tmp_path).strip() == "No lint issues."
 
 
 def test_all_statuses_constant_includes_n_a():

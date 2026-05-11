@@ -78,10 +78,13 @@ class LintIssue:
 @dataclass
 class LintResult:
     issues: list[LintIssue] = field(default_factory=list)
+    parse_errors: list[tuple[str, str]] = field(default_factory=list)  # (spec, msg)
 
     @property
     def ok(self) -> bool:
-        return not self.issues
+        # Parse errors mean some specs were not fully linted; treat that
+        # like a finding so callers (and CI) can't be falsely reassured.
+        return not self.issues and not self.parse_errors
 
 
 def _strip_token(word: str) -> str:
@@ -253,14 +256,30 @@ def lint(root: Path, spec_filter: list[str] | None = None) -> LintResult:
         specs = [s for s in specs if s.name in wanted]
     result = LintResult()
     for spec in specs:
+        for err in spec.parse_errors:
+            result.parse_errors.append((spec.name, err))
         result.issues.extend(lint_spec(spec))
     return result
 
 
 def format_report(result: LintResult, root: Path) -> str:
-    if not result.issues:
-        return "No lint issues.\n"
     lines: list[str] = []
+    if result.parse_errors:
+        lines.append("Parse warnings:")
+        for spec, msg in result.parse_errors:
+            lines.append(f"  - [{spec}] {msg}")
+        lines.append("")
+
+    if not result.issues:
+        if result.parse_errors:
+            lines.append(
+                "No lint issues, but the lint was incomplete: "
+                "see Parse warnings above."
+            )
+        else:
+            lines.append("No lint issues.")
+        return "\n".join(lines).rstrip() + "\n"
+
     by_spec: dict[str, list[LintIssue]] = {}
     for i in result.issues:
         by_spec.setdefault(i.spec, []).append(i)
