@@ -92,6 +92,25 @@ def test_parse_status_arg_rejects_whitespace_or_comma_only():
         _parse_status_arg(" , , ")
 
 
+def test_audit_rejects_both_all_statuses_and_explicit_set(tmp_path):
+    # PR #5 r3216119666: library-level mutual exclusivity. Without this,
+    # all_statuses was silently ignored whenever a statuses set was given.
+    (tmp_path / "specs").mkdir()
+    with pytest.raises(ValueError, match="all_statuses=True and an explicit"):
+        audit(root=tmp_path, all_statuses=True, statuses={"complete"})
+
+
+def test_audit_cli_rejects_both_flags(tmp_path, capsys):
+    # PR #5 r3216119652: CLI surfaces the conflict as a usage error via
+    # argparse's mutually-exclusive-group machinery (exit code 2).
+    (tmp_path / "specs").mkdir()
+    with pytest.raises(SystemExit) as exc_info:
+        main(["audit", "--root", str(tmp_path), "--all-statuses", "--status", "complete"])
+    assert exc_info.value.code == 2
+    captured = capsys.readouterr()
+    assert "not allowed with" in captured.err or "argument" in captured.err
+
+
 def test_all_statuses_constant_includes_n_a():
     # PR #5 r3214892213: docstring previously omitted n-a. The constant is
     # now the source of truth referenced by both audit and the CLI; pin it.

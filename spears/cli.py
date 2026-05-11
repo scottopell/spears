@@ -37,12 +37,13 @@ def _build_parser() -> argparse.ArgumentParser:
         dest="specs",
         help="restrict to a spec directory name; repeatable",
     )
-    audit_p.add_argument(
+    status_group = audit_p.add_mutually_exclusive_group()
+    status_group.add_argument(
         "--all-statuses",
         action="store_true",
         help="report unanchored REQs regardless of status (verbose)",
     )
-    audit_p.add_argument(
+    status_group.add_argument(
         "--status",
         help=(
             "comma-separated list of statuses to report on. "

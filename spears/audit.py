@@ -75,11 +75,18 @@ def audit(
     all_statuses:
         If True, report every declared REQ that is unanchored, regardless
         of status. Equivalent to passing ``statuses=ALL_STATUSES`` (which
-        includes ``n-a`` and ``unknown``).
+        includes ``n-a`` and ``unknown``). Mutually exclusive with the
+        ``statuses`` parameter; passing both raises ValueError.
     statuses:
         Explicit status filter. Defaults to ``{"complete"}`` -- the genuine
-        ``spec lies about implementation`` subset.
+        ``spec lies about implementation`` subset. Mutually exclusive with
+        ``all_statuses``.
     """
+    if all_statuses and statuses is not None:
+        raise ValueError(
+            "audit() got both all_statuses=True and an explicit statuses set; "
+            "pass one or the other, not both"
+        )
     if statuses is None:
         statuses = (
             ALL_STATUSES if all_statuses else {"complete"}
