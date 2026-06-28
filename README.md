@@ -1,41 +1,36 @@
 # spEARS
 
-spEARS (Simple Project with EARS) is a lightweight methodology for working with AI
-coding agents. It provides structured prompts and rules that help agents understand
-project context, track progress, and maintain consistency across sessions.
-The approach emphasizes root cause analysis and reflection over quick fixes.
+spEARS (Simple Project with EARS) is a lightweight, requirements-first specification
+methodology for building software with AI agents. Its goal is a clear shared understanding
+of how a system should work — one that stays honest as the code evolves.
 
-- [Methodology](SPEARS.md)
-- [Agent Rules](SPEARS_AGENT.md)
+It gets there by matching each kind of knowledge to a medium that fits it, rather than
+forcing everything into one always-stale design document:
 
-## Installation
+- **`requirements.md`** — timeless EARS requirements (the *what*, plus why a user cares),
+  with immutable `REQ-IDs`.
+- **`specs/adrs/`** — a shared chain of point-in-time Architecture Decision Records (the
+  *why*, frozen at the moment each decision was made).
+- **`*.allium`** — precise, checkable behavioral specs (the *how, exactly*), reached for
+  only when a feature is complex enough to warrant it.
+- **`executive.md`** — the one document that tracks the present: status, and forward-looking
+  open questions.
 
-Copy `SPEARS.md` and `SPEARS_AGENT.md` into your project’s root directory:
+The reasoning behind that split is the heart of the method — see
+[`skills/spears/references/design-philosophy.md`](skills/spears/references/design-philosophy.md).
 
-```bash
-cp path/to/spears/SPEARS.md path/to/spears/SPEARS_AGENT.md .
-```
+## Where it lives
 
-Add a reference to them in your project’s `CLAUDE.md` or `AGENTS.md`. I recommend
-putting an @-reference to automatically include SPEARS_AGENT.md and only referencing
-SPEARS.md for extra details.
+spEARS is packaged as a skill. The canonical entry point is
+[`skills/spears/SKILL.md`](skills/spears/SKILL.md) — a lean hub that routes to references
+for EARS authoring, ADRs, discovery, validation, traceability, and worked examples. Point
+your agent at the skill (or install it as a skill in Cowork / Claude Code) and it will pull
+in the rest as needed.
 
-### Optional: Claude Code Agents
+## Optional: Allium
 
-```bash
-cp -r path/to/spears/.claude/agents .claude/
-```
+[`skills/allium/`](skills/allium) is a vendored companion skill for the precise behavioral
+layer. It is **optional** — spEARS is complete on its own. Install Allium when you want
+formal behavioral specs and generated tests for the complex minority of features that earn
+them.
 
-- `spears-update-markdown` - Updates spEARS specification files (requirements.md,
-  design.md, executive.md) following EARS format and document separation rules
-- `spears-validate-spec` - Validates specifications for structural correctness and
-  cross-references codebase to verify status claims
-
-### Optional: Claude Code Commands
-
-```bash
-cp -r path/to/spears/.claude/commands .claude/
-```
-
-- `/spears-reflection` - End-of-session command that reflects on progress, captures next
-  steps, and outputs a continuation prompt to clipboard
