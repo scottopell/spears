@@ -1,65 +1,36 @@
 # spEARS
 
-spEARS (Simple Project with EARS) is a requirements-driven methodology for
-working with AI coding agents.
-It provides explicit traceability from business requirements to tests to code
-using a strict three-document pattern (requirements.md, design.md, executive.md)
-and EARS (Easy Approach to Requirements Syntax) format.
+spEARS (Simple Project with EARS) is a lightweight, requirements-first specification
+methodology for building software with AI agents. Its goal is a clear shared understanding
+of how a system should work — one that stays honest as the code evolves.
 
-## Install
+It gets there by matching each kind of knowledge to a medium that fits it, rather than
+forcing everything into one always-stale design document:
 
-```bash
-npx skills add scottopell/spears
-```
+- **`requirements.md`** — timeless EARS requirements (the *what*, plus why a user cares),
+  with immutable `REQ-IDs`.
+- **`specs/adrs/`** — a shared chain of point-in-time Architecture Decision Records (the
+  *why*, frozen at the moment each decision was made).
+- **`*.allium`** — precise, checkable behavioral specs (the *how, exactly*), reached for
+  only when a feature is complex enough to warrant it.
+- **`executive.md`** — the one document that tracks the present: status, and forward-looking
+  open questions.
 
-This installs the `spears` skill into your project’s `.agents/skills/`
-directory.
+The reasoning behind that split is the heart of the method — see
+[`skills/spears/references/design-philosophy.md`](skills/spears/references/design-philosophy.md).
 
-## What It Does
+## Where it lives
 
-The skill provides six workflows, selected automatically based on context:
+spEARS is packaged as a skill. The canonical entry point is
+[`skills/spears/SKILL.md`](skills/spears/SKILL.md) — a lean hub that routes to references
+for EARS authoring, ADRs, discovery, validation, traceability, and worked examples. Point
+your agent at the skill (or install it as a skill in Cowork / Claude Code) and it will pull
+in the rest as needed.
 
-| Workflow | When it triggers |
-| --- | --- |
-| **Discover** | New feature, vague idea, “I want to build X” |
-| **Write Specs** | Creating or updating requirements, design, or executive docs |
-| **Implement** | Building from existing specs |
-| **Validate** | Checking spec accuracy against the codebase |
-| **Lint** | Enforcing quality rules, fixing violations |
-| **Reflect** | End-of-session continuation prompt |
+## Optional: Allium
 
-Discovery is the default entry point when intent is unclear -- it uses Socratic
-questioning to understand user needs before writing anything.
+[`skills/allium/`](skills/allium) is a vendored companion skill for the precise behavioral
+layer. It is **optional** — spEARS is complete on its own. Install Allium when you want
+formal behavioral specs and generated tests for the complex minority of features that earn
+them.
 
-## The Three-Document System
-
-Every feature gets a spec directory with three files:
-
-```
-specs/feature-name/
-  requirements.md   # WHAT to build (EARS format, immutable IDs)
-  design.md         # HOW to build it (architecture, trade-offs)
-  executive.md      # WHERE we are (status, milestones, progress)
-```
-
-Each document has a different relationship with time:
-- **requirements.md** is timeless (defines the ideal end state)
-- **design.md** is slightly ahead of reality (describes the technical approach)
-- **executive.md** is the temporal link (reflects current reality)
-
-## Key Principles
-
-- **Specs without traceable user journeys are hollow.** Every requirement must
-  trace to a real user doing a real thing.
-- **Self-containment.** Every doc must be understandable without external
-  context. No “as before”, no “unlike the old approach.”
-- **Design describes architecture, not schedule.** Phasing decisions ("start
-  with X, add Y later") belong in executive.md.
-- **Requirements describe the ideal end state.** No migration concerns, no
-  backwards compatibility, no implementation technology.
-- **YAGNI.** Only implement what’s in requirements.md.
-
-## Links
-
-- [EARS Whitepaper (Rolls-Royce)](https://www.researchgate.net/publication/224079416_Easy_Approach_to_Requirements_Syntax_EARS)
-- [skills.sh](https://skills.sh)
