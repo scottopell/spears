@@ -1,17 +1,19 @@
 # Worked Examples
 
-Two features taken end-to-end. The first is state-machine-complex and crosses the Allium
-gate; the second stays entirely in the markdown layer, showing that spEARS is complete
-without Allium. Examples carry intent better than rules — when in doubt, imitate these.
+Two features taken end-to-end.
+The first is state-machine-complex and crosses the Allium gate; the second stays
+entirely in the markdown layer, showing that spEARS is complete without Allium.
+Examples carry intent better than rules — when in doubt, imitate these.
 
----
+* * *
 
 ## Example 1: Task approval (crosses the Allium gate)
 
 ### 1. Discover, then write requirements
 
-Discovery establishes that reviewers approve pending tasks, and that approving a task with
-unmet preconditions would be dangerous. That yields `specs/task-approval/requirements.md`:
+Discovery establishes that reviewers approve pending tasks, and that approving a
+task with unmet preconditions would be dangerous.
+That yields `specs/task-approval/requirements.md`:
 
 ```markdown
 # Task Approval
@@ -65,8 +67,10 @@ Reviewers can approve pending tasks, and approval is blocked when preconditions 
 
 ### 3. The gate fires YES
 
-Task approval is a lifecycle with preconditions — squarely state-machine-complex. Hand off
-to Allium (`allium elicit`), producing `task-approval.allium` that references the REQ-IDs:
+Task approval is a lifecycle with preconditions — squarely
+state-machine-complex.
+Hand off to Allium (`allium elicit`), producing `task-approval.allium` that
+references the REQ-IDs:
 
 ```text
 entity Task {
@@ -88,13 +92,15 @@ rule ApproveTask {
 }
 ```
 
-`allium propagate` turns this into tests (which must fail first); then you implement.
+`allium propagate` turns this into tests (which must fail first); then you
+implement.
 
 ### 4. A design fork appears → Proposed ADR → Accepted
 
-Mid-implementation a real fork surfaces: should an approved task be reversible? Both
-answers are defensible, so it becomes a decision of record — `specs/adrs/004_approval-is-irreversible.md`,
-opened as `Proposed`, flipped to `Accepted` once the call is made:
+Mid-implementation a real fork surfaces: should an approved task be reversible?
+Both answers are defensible, so it becomes a decision of record —
+`specs/adrs/004_approval-is-irreversible.md`, opened as `Proposed`, flipped to
+`Accepted` once the call is made:
 
 ```markdown
 # ADR-004: Task Approval Is Irreversible
@@ -126,9 +132,10 @@ Approval is irreversible. The transition graph has no `approved -> pending` edge
 - REQ-TA-001
 ```
 
-Note what just happened: the *why* of irreversibility did not go into `requirements.md`
-(which stays timeless and says only *what*) or the `.allium` (which says *how*). It went to
-an ADR, where the path-dependent reasoning belongs.
+Note what just happened: the *why* of irreversibility did not go into
+`requirements.md` (which stays timeless and says only *what*) or the `.allium`
+(which says *how*). It went to an ADR, where the path-dependent reasoning
+belongs.
 
 ### 5. Implement, verify, update status
 
@@ -139,16 +146,18 @@ Code carries the suture; tests verify; the behavioral layer is checked:
 pub fn approve(task: &mut Task) -> Result<()> { … }
 ```
 
-`weed` confirms the `.allium` matches the code; [validation.md](validation.md) confirms the
-markdown layer (EARS intact, ADR-004 present, no contradictions, status accurate). Then
-`executive.md` flips `REQ-TA-001` and `REQ-TA-002` to `✅`.
+`weed` confirms the `.allium` matches the code; [validation.md](validation.md)
+confirms the markdown layer (EARS intact, ADR-004 present, no contradictions,
+status accurate).
+Then `executive.md` flips `REQ-TA-001` and `REQ-TA-002` to `✅`.
 
----
+* * *
 
 ## Example 2: CSV export (stays in the markdown layer)
 
-A reporting feature: export a table to CSV. No states, no lifecycle, no ordering hazard —
-the Allium gate fires **NO**. spEARS handles it completely without Allium.
+A reporting feature: export a table to CSV. No states, no lifecycle, no ordering
+hazard — the Allium gate fires **NO**. spEARS handles it completely without
+Allium.
 
 ```markdown
 ### REQ-EX-001: Export the Current View as CSV
@@ -163,11 +172,12 @@ THE SYSTEM SHALL produce a CSV containing only the header row
 that silently drops rows or omits headers quietly corrupts their analysis.
 ```
 
-You implement directly against `REQ-EX-001` (with `// REQ-EX-001` comments), write tests
-from the two EARS clauses, and track status in `executive.md`. There is no `.allium`, no
-`weed`, no behavioral layer — and nothing is missing. If a real decision arises (say, which
-delimiter to use for locales that reserve the comma), it earns an ADR; otherwise the
-markdown layer is the whole spec.
+You implement directly against `REQ-EX-001` (with `// REQ-EX-001` comments),
+write tests from the two EARS clauses, and track status in `executive.md`. There
+is no `.allium`, no `weed`, no behavioral layer — and nothing is missing.
+If a real decision arises (say, which delimiter to use for locales that reserve
+the comma), it earns an ADR; otherwise the markdown layer is the whole spec.
 
-This is the common case. Most features look like Example 2; Example 1's machinery is for
-the complex minority that earns it.
+This is the common case.
+Most features look like Example 2; Example 1’s machinery is for the complex
+minority that earns it.

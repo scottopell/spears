@@ -1,12 +1,13 @@
 # Complete patterns
 
 This library contains reusable patterns for common SaaS scenarios.
-Each pattern demonstrates specific Allium language features and can be adapted to your
-domain.
+Each pattern demonstrates specific Allium language features and can be adapted
+to your domain.
 
-Patterns elide common cross-cutting entities (`Email`, `Notification`, `AuditLog`, etc.)
-for brevity. In a real specification, declare these as external entities or define them
-in a shared module.
+Patterns elide common cross-cutting entities (`Email`, `Notification`,
+`AuditLog`, etc.) for brevity.
+In a real specification, declare these as external entities or define them in a
+shared module.
 
 | Pattern | Key Features Demonstrated |
 | --- | --- |
@@ -24,11 +25,11 @@ in a shared module.
 
 ## Pattern 1: Password Authentication with Reset
 
-**Demonstrates:** Temporal triggers, token lifecycle, defaults, surfaces, multiple
-related rules
+**Demonstrates:** Temporal triggers, token lifecycle, defaults, surfaces,
+multiple related rules
 
-This pattern handles user registration, login and password reset: the foundation of most
-SaaS applications.
+This pattern handles user registration, login and password reset: the foundation
+of most SaaS applications.
 
 ```
 -- allium: 3
@@ -316,11 +317,14 @@ surface AccountManagement {
 ```
 
 **Key language features shown:**
-- `config` block for configurable parameters (`config.min_password_length`, etc.)
+- `config` block for configurable parameters (`config.min_password_length`,
+  etc.)
 - Derived values (`is_locked`, `is_valid`)
-- Multiple rules for same trigger with different `requires` (login success vs failure)
-- Temporal triggers with guards (`when: token: PasswordResetToken.expires_at <= now`
-  with `requires: status = pending`)
+- Multiple rules for same trigger with different `requires` (login success vs
+  failure)
+- Temporal triggers with guards
+  (`when: token: PasswordResetToken.expires_at <= now` with
+  `requires: status = pending`)
 - Projections for filtered collections (`pending_reset_tokens`)
 - Bulk updates with `for` iteration
 - Explicit `let` binding for created entities
@@ -331,11 +335,11 @@ surface AccountManagement {
 
 ## Pattern 2: Role-Based Access Control (RBAC)
 
-**Demonstrates:** Derived permissions, relationships, using permissions in `requires`
-clauses, surfaces
+**Demonstrates:** Derived permissions, relationships, using permissions in
+`requires` clauses, surfaces
 
-This pattern implements hierarchical roles where higher roles inherit permissions from
-lower ones.
+This pattern implements hierarchical roles where higher roles inherit
+permissions from lower ones.
 
 ```
 -- allium: 3
@@ -637,8 +641,8 @@ surface WorkspaceDocuments {
 
 ## Pattern 3: Invitation to Resource
 
-**Demonstrates:** Tokenised actions, permission levels, invitation lifecycle, guest vs
-member flows, surfaces
+**Demonstrates:** Tokenised actions, permission levels, invitation lifecycle,
+guest vs member flows, surfaces
 
 This pattern handles inviting users to collaborate on resources, whether they’re
 existing users or not.
@@ -911,10 +915,11 @@ surface InvitationResponse {
 ```
 
 **Key language features shown:**
-- Named enum (`Permission`) shared across `ResourceShare` and `ResourceInvitation`
+- Named enum (`Permission`) shared across `ResourceShare` and
+  `ResourceInvitation`
 - Complex permission logic in `requires`
-- Distinct trigger names for different parameter shapes (`ExistingUserAcceptsInvitation`
-  vs `NewUserAcceptsInvitation`)
+- Distinct trigger names for different parameter shapes
+  (`ExistingUserAcceptsInvitation` vs `NewUserAcceptsInvitation`)
 - Invitation lifecycle (pending → accepted/declined/expired/revoked)
 - Checking existence with `exists` keyword
 - Permission escalation prevention (`can't invite as admin unless owner`)
@@ -928,8 +933,8 @@ surface InvitationResponse {
 **Demonstrates:** Simple state machines, projections that filter deleted items,
 retention policies
 
-This pattern implements soft delete where items appear deleted but can be restored
-within a retention period.
+This pattern implements soft delete where items appear deleted but can be
+restored within a retention period.
 
 ```
 -- allium: 3
@@ -1055,7 +1060,8 @@ rule RestoreAll {
 **Key language features shown:**
 - `status` field with clear lifecycle
 - Nullable timestamps (`deleted_at: Timestamp?`)
-- Projections filtering by status (`documents: all_documents where status = active`)
+- Projections filtering by status
+  (`documents: all_documents where status = active`)
 - Derived values using config
   (`retention_expires_at: deleted_at + config.retention_period`)
 - Temporal trigger for automatic cleanup
@@ -1067,12 +1073,13 @@ rule RestoreAll {
 
 ## Pattern 5: Notification Preferences & Digests
 
-**Demonstrates:** Sum types for notification variants, user preferences affecting rule
-behaviour, digest batching, temporal triggers, surfaces
+**Demonstrates:** Sum types for notification variants, user preferences
+affecting rule behaviour, digest batching, temporal triggers, surfaces
 
-This pattern handles in-app notifications with user-controlled email preferences and
-digest batching. It uses sum types to model different notification kinds, each carrying
-its own contextual data rather than pre-computed strings.
+This pattern handles in-app notifications with user-controlled email preferences
+and digest batching.
+It uses sum types to model different notification kinds, each carrying its own
+contextual data rather than pre-computed strings.
 
 ```
 -- allium: 3
@@ -1433,11 +1440,12 @@ surface NotificationPreferences {
 **Key language features shown:**
 - **Sum types**: `kind: MentionNotification | ReplyNotification | ...` declares
   notification variants
-- **Variant declarations**: Each notification kind uses `variant X : Notification`
-  syntax
-- **Variant-specific creation rules**: Each variant has its own creation rule with
-  appropriate fields
-- **Exhaustive kind checking**: `SendImmediateEmail` handles all variants explicitly
+- **Variant declarations**: Each notification kind uses
+  `variant X : Notification` syntax
+- **Variant-specific creation rules**: Each variant has its own creation rule
+  with appropriate fields
+- **Exhaustive kind checking**: `SendImmediateEmail` handles all variants
+  explicitly
 - Named enum (`EmailFrequency`) shared across preference fields
 - User preferences stored as entity
 - Temporal trigger for per-user digest scheduling
@@ -1466,24 +1474,24 @@ MentionNotification.created(
 ```
 
 This is better because:
-1. **Rich queries**: “Show all notifications about this document” queries the actual
-   relationships
-2. **Type safety**: Creating a `MentionNotification` requires a `comment` - you can’t
-   forget it
-3. **Flexible rendering**: Display logic can access full entity data, not just truncated
-   strings
-4. **Consistency**: If a user’s name changes, notification titles reflect the current
-   name
+1. **Rich queries**: “Show all notifications about this document” queries the
+   actual relationships
+2. **Type safety**: Creating a `MentionNotification` requires a `comment` - you
+   can’t forget it
+3. **Flexible rendering**: Display logic can access full entity data, not just
+   truncated strings
+4. **Consistency**: If a user’s name changes, notification titles reflect the
+   current name
 
 * * *
 
 ## Pattern 6: Usage Limits & Quotas
 
-**Demonstrates:** Limit checks in `requires`, metered resources, plan tiers, overage
-handling, surfaces
+**Demonstrates:** Limit checks in `requires`, metered resources, plan tiers,
+overage handling, surfaces
 
-This pattern handles SaaS usage limits: different plans have different quotas, and usage
-is tracked and enforced.
+This pattern handles SaaS usage limits: different plans have different quotas,
+and usage is tracked and enforced.
 
 ```
 -- allium: 3
@@ -1820,29 +1828,33 @@ surface APIAccess {
 
 **Key language features shown:**
 - Plan definitions with limits
-- Derived boolean checks for limit enforcement (`can_add_document`, `can_add_member`)
+- Derived boolean checks for limit enforcement (`can_add_document`,
+  `can_add_member`)
 - `requires` checking limits before actions
 - Paired rules for success/failure cases
 - Usage tracking with events
-- Temporal trigger for daily reset (`when: usage: WorkspaceUsage.next_reset_at <= now`)
+- Temporal trigger for daily reset
+  (`when: usage: WorkspaceUsage.next_reset_at <= now`)
 - Plan upgrade/downgrade logic with `let` binding to capture pre-mutation state
 - Feature flags (`can_use_feature(f)`)
-- Interaction surface for usage dashboard and API surface with rate limit guarantee
+- Interaction surface for usage dashboard and API surface with rate limit
+  guarantee
 
 > **Exposing an API vs.
-> calling one.** The `APIAccess` surface here models *exposing* a rate-limited API to
-> consumers — the surface owner is the API, and the consumer is the `facing` party.
-> To model the opposite case, where your spec is a *client* calling out to a third-party
-> API, SDK, or MCP server, do not reach for `provides:`; use a module-level `contract`
-> referenced with `demands` from the caller’s side.
-> See Pattern 9, *Example: Calling an external API (the `demands` side)*.
+> calling one.** The `APIAccess` surface here models *exposing* a rate-limited
+> API to consumers — the surface owner is the API, and the consumer is the
+> `facing` party. To model the opposite case, where your spec is a *client*
+> calling out to a third-party API, SDK, or MCP server, do not reach for
+> `provides:`; use a module-level `contract` referenced with `demands` from the
+> caller’s side. See Pattern 9, *Example: Calling an external API (the `demands`
+> side)*.
 
 * * *
 
 ## Pattern 7: Comments with Mentions
 
-**Demonstrates:** Nested entities, parsing for mentions, cross-entity notifications,
-threading, surfaces
+**Demonstrates:** Nested entities, parsing for mentions, cross-entity
+notifications, threading, surfaces
 
 This pattern implements comments with @mentions, including mention parsing and
 notification generation.
@@ -2130,31 +2142,36 @@ surface CommentThread {
 
 **Key language features shown:**
 - Nested/recursive entities (comments with replies)
-- Entity creation triggers with binding (`when: mention: CommentMention.created`)
+- Entity creation triggers with binding
+  (`when: mention: CommentMention.created`)
 - Black box functions (`parse_mentions()`, `users_with_usernames()`)
 - Explicit `let` binding for created entities
 - Set operations (`new_mentioned_users - old_mentions`)
 - Depth limiting (`thread_depth < 3`)
-- **Cross-pattern triggers**: Emits `UserMentioned` and `CommentReplied` triggers that
-  Pattern 5 handles
-- Avoiding double notifications (`original_author not in comment.mentioned_users`)
+- **Cross-pattern triggers**: Emits `UserMentioned` and `CommentReplied`
+  triggers that Pattern 5 handles
+- Avoiding double notifications
+  (`original_author not in comment.mentioned_users`)
 - Toggle pattern with conditional ensures
 - Join entity with three keys (`CommentReaction{comment, user, emoji}`)
-- Surface with role-conditional actions (author can edit, author or admin can delete)
+- Surface with role-conditional actions (author can edit, author or admin can
+  delete)
 
 * * *
 
 ## Pattern 8: Integrating Library Specs
 
-**Demonstrates:** External spec references with coordinates, configuration blocks,
-config parameter references, responding to external triggers, using external entities
+**Demonstrates:** External spec references with coordinates, configuration
+blocks, config parameter references, responding to external triggers, using
+external entities
 
-Library specs are standalone specifications for common functionality: authentication
-providers, payment processors, email services.
-They define a contract that implementations must satisfy, and your application spec
-composes them in. Consuming specs can reference a library spec’s config values as
-defaults for their own parameters, avoiding duplication when the values should track
-each other.
+Library specs are standalone specifications for common functionality:
+authentication providers, payment processors, email services.
+They define a contract that implementations must satisfy, and your application
+spec composes them in.
+Consuming specs can reference a library spec’s config values as defaults for
+their own parameters, avoiding duplication when the values should track each
+other.
 
 ### Example: OAuth Authentication
 
@@ -2352,7 +2369,8 @@ rule UnlinkProvider {
 
 ### Example: Payment Processing
 
-This example shows integrating a payment processor spec for subscription billing.
+This example shows integrating a payment processor spec for subscription
+billing.
 
 ```
 -- allium: 3
@@ -2585,30 +2603,33 @@ rule CancelSubscription {
 
 When creating or choosing library specs:
 
-1. **Immutable coordinates**: Always use content-addressed references (git SHAs), never
-   floating versions
-2. **Configuration over convention**: Library specs should expose configuration for
-   anything that might vary between applications
-3. **Observable triggers**: Library specs should emit triggers for all significant
-   events so consuming specs can respond
-4. **Minimal coupling**: Library specs shouldn’t depend on your application entities -
-   the linkage goes one way
-5. **Clear boundaries**: The library spec handles its domain (OAuth flow, payment
-   processing); your spec handles application concerns (user creation, access control)
+1. **Immutable coordinates**: Always use content-addressed references (git
+   SHAs), never floating versions
+2. **Configuration over convention**: Library specs should expose configuration
+   for anything that might vary between applications
+3. **Observable triggers**: Library specs should emit triggers for all
+   significant events so consuming specs can respond
+4. **Minimal coupling**: Library specs shouldn’t depend on your application
+   entities - the linkage goes one way
+5. **Clear boundaries**: The library spec handles its domain (OAuth flow,
+   payment processing); your spec handles application concerns (user creation,
+   access control)
 
 * * *
 
 ## Pattern 9: Framework Integration Contract
 
-**Demonstrates:** Contract declarations, expression-bearing invariants, `contracts:`
-clause with `demands`/`fulfils`, programmatic surfaces, typed signatures
+**Demonstrates:** Contract declarations, expression-bearing invariants,
+`contracts:` clause with `demands`/`fulfils`, programmatic surfaces, typed
+signatures
 
-This pattern specifies the contract between an event-sourcing framework and its domain
-modules. The framework demands that each module supply a deterministic evaluation
-function; in return, the surface fulfils event submission and state snapshot services.
-Unlike user-facing surfaces that use `exposes` and `provides`, framework-to-module
-boundaries use a `contracts:` clause with `demands` and `fulfils` to describe
-programmatic obligations.
+This pattern specifies the contract between an event-sourcing framework and its
+domain modules. The framework demands that each module supply a deterministic
+evaluation function; in return, the surface fulfils event submission and state
+snapshot services.
+Unlike user-facing surfaces that use `exposes` and `provides`,
+framework-to-module boundaries use a `contracts:` clause with `demands` and
+`fulfils` to describe programmatic obligations.
 Contracts are declared at module level so they can be reused across surfaces or
 referenced from other specs.
 
@@ -2901,74 +2922,77 @@ surface EventSourcingIntegration {
 **Key language features shown:**
 - `contract` declarations at module level for reuse across surfaces
 - Surface `contracts:` clause with `demands`/`fulfils` direction markers
-  (`demands DeterministicEvaluation`, `fulfils EventSubmitter`) without repeating
-  signatures or invariants
-- Expression-bearing `invariant Name { expression }` on entities (`PayloadWithinLimit`
-  on `EventSubmission`)
-- Prose-only `@invariant Name` inside contracts for properties that cannot be expressed
-  as a single boolean expression
+  (`demands DeterministicEvaluation`, `fulfils EventSubmitter`) without
+  repeating signatures or invariants
+- Expression-bearing `invariant Name { expression }` on entities
+  (`PayloadWithinLimit` on `EventSubmission`)
+- Prose-only `@invariant Name` inside contracts for properties that cannot be
+  expressed as a single boolean expression
 - `@guarantee Name` at surface level, distinct from contract-scoped invariants
   (boundary-wide vs contract-scoped assertions)
 - `@guidance` inside a contract for non-normative implementation advice
-- Mixed surface: `ModuleAdministration` uses traditional `exposes`/`provides` for human
-  actors; `EventSourcingIntegration` uses `contracts:` clause for programmatic
-  integration
-- Actor declaration for a code-level party (`FrameworkRuntime` identified by an active
-  module)
+- Mixed surface: `ModuleAdministration` uses traditional `exposes`/`provides`
+  for human actors; `EventSourcingIntegration` uses `contracts:` clause for
+  programmatic integration
+- Actor declaration for a code-level party (`FrameworkRuntime` identified by an
+  active module)
 
 ### When to use contracts
 
-Use `contract` declarations when the boundary is between code and code rather than
-between a user and an application.
-All contracts are declared at module level and referenced in surfaces via a `contracts:`
-clause with `demands`/`fulfils` direction markers.
+Use `contract` declarations when the boundary is between code and code rather
+than between a user and an application.
+All contracts are declared at module level and referenced in surfaces via a
+`contracts:` clause with `demands`/`fulfils` direction markers.
 Common scenarios:
 
-- **Framework-to-plugin contracts**: the framework demands evaluation logic, fulfils
-  lifecycle services
-- **Service-to-adapter boundaries**: the service demands a storage adapter, fulfils a
-  query interface
-- **Cross-context integration**: one bounded context demands event handlers, fulfils
-  event streams
+- **Framework-to-plugin contracts**: the framework demands evaluation logic,
+  fulfils lifecycle services
+- **Service-to-adapter boundaries**: the service demands a storage adapter,
+  fulfils a query interface
+- **Cross-context integration**: one bounded context demands event handlers,
+  fulfils event streams
 - **SDK contracts**: the SDK demands configuration and callbacks, fulfils client
   operations
 
 Do not use contracts for user-facing surfaces.
-If the external party is a person interacting through a UI, use `exposes` (what they
-see) and `provides` (what actions they can take).
+If the external party is a person interacting through a UI, use `exposes` (what
+they see) and `provides` (what actions they can take).
 Contracts describe what code must implement, not what users can do.
 
 ### Contracts vs provides
 
-`provides:` lists actions that an actor can invoke, each corresponding to a rule’s
-external stimulus trigger.
-`fulfils ContractName` in a `contracts:` clause declares a set of typed operations that
-the surface owner supplies to the counterpart as an API. The distinction:
+`provides:` lists actions that an actor can invoke, each corresponding to a
+rule’s external stimulus trigger.
+`fulfils ContractName` in a `contracts:` clause declares a set of typed
+operations that the surface owner supplies to the counterpart as an API. The
+distinction:
 
-- `provides: SubmitEvent(module, key, name, payload)` — an action the actor triggers; a
-  rule fires in response
-- `fulfils EventSubmitter` — a typed operation set the surface makes available, defined
-  in a `contract` declaration; the implementation is the surface owner’s responsibility
+- `provides: SubmitEvent(module, key, name, payload)` — an action the actor
+  triggers; a rule fires in response
+- `fulfils EventSubmitter` — a typed operation set the surface makes available,
+  defined in a `contract` declaration; the implementation is the surface owner’s
+  responsibility
 
-Both describe things the surface supplies, but `provides` connects to the rule system
-while `fulfils` references a programmatic contract with typed signatures and invariants.
+Both describe things the surface supplies, but `provides` connects to the rule
+system while `fulfils` references a programmatic contract with typed signatures
+and invariants.
 
 ### Example: Calling an external API (the `demands` side)
 
-The main example above is the surface owner *supplying* services to its counterpart
-(`fulfils EventSubmitter`). The mirror-image case is just as common, and easy to model
-wrongly: your spec is the **client** that calls out to an external typed API — a
-third-party REST service, a vendor SDK, or an MCP server.
-Reaching for `provides:` here is the wrong turn, because `provides` is for a user
-triggering a domain rule, not for one body of code calling another.
-The right construct is a module-level `contract` referenced with `demands` from the
-caller’s surface: the spec requires the counterpart to implement the operations, and
-calls them.
+The main example above is the surface owner *supplying* services to its
+counterpart (`fulfils EventSubmitter`). The mirror-image case is just as common,
+and easy to model wrongly: your spec is the **client** that calls out to an
+external typed API — a third-party REST service, a vendor SDK, or an MCP server.
+Reaching for `provides:` here is the wrong turn, because `provides` is for a
+user triggering a domain rule, not for one body of code calling another.
+The right construct is a module-level `contract` referenced with `demands` from
+the caller’s surface: the spec requires the counterpart to implement the
+operations, and calls them.
 
-This example models an address book that resolves postal addresses to coordinates
-through an external geocoding service.
-Our spec is purely the caller — it declares the typed boundary and records results, but
-never implements `geocode` itself.
+This example models an address book that resolves postal addresses to
+coordinates through an external geocoding service.
+Our spec is purely the caller — it declares the typed boundary and records
+results, but never implements `geocode` itself.
 
 ```
 -- allium: 3
@@ -3086,37 +3110,40 @@ surface GeocodingClient {
 }
 ```
 
-Like the framework example, the rules handle domain state (recording a result) rather
-than spelling out the call itself — the `contract` declares the typed boundary, and
-`demands` on the surface records who must implement it.
+Like the framework example, the rules handle domain state (recording a result)
+rather than spelling out the call itself — the `contract` declares the typed
+boundary, and `demands` on the surface records who must implement it.
 
 **Reading the direction markers.** The choice between `demands`, `fulfils` and
 `provides` is about who implements what, and for whom:
 
-- `demands GeocodingApi` — *I call out to the counterpart.* The facing party implements
-  these operations; my spec invokes them.
+- `demands GeocodingApi` — *I call out to the counterpart.* The facing party
+  implements these operations; my spec invokes them.
   Use for “my spec is a client of an external API/SDK/MCP server”.
-- `fulfils EventSubmitter` — *I supply this API to the counterpart.* My spec implements
-  these operations; the facing party invokes them.
-  Use for “my spec is the service others integrate against” (as in the framework example
-  above).
-- `provides UserResetsPassword(...)` — *a user triggers an action and a domain rule
-  fires.* Not a code-to-code contract at all; the action maps to a rule’s external
-  stimulus trigger. Use for human-facing surfaces.
+- `fulfils EventSubmitter` — *I supply this API to the counterpart.* My spec
+  implements these operations; the facing party invokes them.
+  Use for “my spec is the service others integrate against” (as in the framework
+  example above).
+- `provides UserResetsPassword(...)` — *a user triggers an action and a domain
+  rule fires.* Not a code-to-code contract at all; the action maps to a rule’s
+  external stimulus trigger.
+  Use for human-facing surfaces.
 
-A single surface can mix `demands` and `fulfils` (the framework demands evaluation logic
-while fulfilling submission and snapshot services).
-It should not use a `contracts:` clause and `provides:` to describe the *same* boundary:
-`provides` is for people, `demands`/`fulfils` for code.
+A single surface can mix `demands` and `fulfils` (the framework demands
+evaluation logic while fulfilling submission and snapshot services).
+It should not use a `contracts:` clause and `provides:` to describe the *same*
+boundary: `provides` is for people, `demands`/`fulfils` for code.
 
 ### Invariant vs guarantee
 
 `@guarantee` asserts a property of the surface boundary as a whole.
-`invariant` asserts a property scoped to the operations within a specific contract.
+`invariant` asserts a property scoped to the operations within a specific
+contract.
 
 Invariants come in two forms.
 Expression-bearing invariants carry a boolean expression that can be checked
-mechanically. Prose invariants describe properties that require human or LLM judgement.
+mechanically. Prose invariants describe properties that require human or LLM
+judgement.
 
 ```
 -- Expression-bearing invariant on an entity
@@ -3137,8 +3164,8 @@ contract DeterministicEvaluation {
 ```
 
 Use `@guarantee` for cross-cutting properties that span the whole surface.
-Use `invariant` for properties tied to specific operations within a contract, or for
-entity-level assertions.
+Use `invariant` for properties tied to specific operations within a contract, or
+for entity-level assertions.
 
 * * *
 
@@ -3198,7 +3225,11 @@ When applying:
 
 When using patterns, avoid:
 
-- **Over-engineering**: Don’t include reaction system if you don’t need reactions
-- **Premature abstraction**: Start concrete, extract patterns when you see repetition
-- **Pattern worship**: If the pattern doesn’t fit, adapt it or write something custom
-- **Ignoring context**: A free tier pattern that makes sense for B2C may not fit B2B
+- **Over-engineering**: Don’t include reaction system if you don’t need
+  reactions
+- **Premature abstraction**: Start concrete, extract patterns when you see
+  repetition
+- **Pattern worship**: If the pattern doesn’t fit, adapt it or write something
+  custom
+- **Ignoring context**: A free tier pattern that makes sense for B2C may not fit
+  B2B

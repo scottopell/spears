@@ -1,15 +1,17 @@
 # Writing EARS Requirements
 
-EARS — Easy Approach to Requirements Syntax — was developed at Rolls-Royce for aviation
-systems. It gives requirements a small, consistent grammar that keeps them unambiguous and
-testable: each statement translates directly to a test. This guide covers the grammar, the
-ID and title conventions, and the one mistake that causes the most pain — leaking
-implementation into requirements.
+EARS — Easy Approach to Requirements Syntax — was developed at Rolls-Royce for
+aviation systems. It gives requirements a small, consistent grammar that keeps
+them unambiguous and testable: each statement translates directly to a test.
+This guide covers the grammar, the ID and title conventions, and the one mistake
+that causes the most pain — leaking implementation into requirements.
 
-Requirements are **timeless**: they state what must be true, independent of whether it is
-built yet. An unimplemented requirement is still a valid requirement — it just has a `❌`
-in `executive.md`. Keep status, implementation, and decision-logs *out* of
-`requirements.md` entirely; they live in `executive.md`, the code, and ADRs respectively.
+Requirements are **timeless**: they state what must be true, independent of
+whether it is built yet.
+An unimplemented requirement is still a valid requirement — it just has a `❌` in
+`executive.md`. Keep status, implementation, and decision-logs *out* of
+`requirements.md` entirely; they live in `executive.md`, the code, and ADRs
+respectively.
 
 ## The grammar
 
@@ -55,13 +57,15 @@ WHERE extended analysis is enabled
 THE SYSTEM SHALL include the deep-scan section in the report
 ```
 
-Most requirements pair a happy path with its edge cases — several `WHEN`/`IF` clauses
-under one requirement. One clause should map to one test.
+Most requirements pair a happy path with its edge cases — several `WHEN`/`IF`
+clauses under one requirement.
+One clause should map to one test.
 
 ## Specific and measurable, not vague
 
-A requirement a reader could interpret two ways is too vague; one that names a technology
-is too detailed. Aim for observable, verifiable behavior with concrete criteria.
+A requirement a reader could interpret two ways is too vague; one that names a
+technology is too detailed.
+Aim for observable, verifiable behavior with concrete criteria.
 
 | Avoid | Prefer |
 | --- | --- |
@@ -69,18 +73,20 @@ is too detailed. Aim for observable, verifiable behavior with concrete criteria.
 | THE SYSTEM SHALL handle errors gracefully | WHEN the database connection fails, THE SYSTEM SHALL display a retry message |
 | THE SYSTEM SHALL provide good UX | WHEN form validation fails, THE SYSTEM SHALL highlight the invalid fields |
 
-Good test: could someone else implement this from the requirement alone, and could you
-write a test that passes or fails unambiguously? If not, sharpen it.
+Good test: could someone else implement this from the requirement alone, and
+could you write a test that passes or fails unambiguously?
+If not, sharpen it.
 
 ## Requirement IDs
 
 Every requirement gets an immutable ID: `REQ-<ABBREV>-###`.
 
-- `<ABBREV>` — a short feature abbreviation (`RL` rate limiting, `UA` user auth, `TA` task
-  approval).
+- `<ABBREV>` — a short feature abbreviation (`RL` rate limiting, `UA` user auth,
+  `TA` task approval).
 - `###` — zero-padded sequential number within the feature.
-- **IDs are never reused or renumbered.** This is the load-bearing rule of the whole
-  system: the ID is what makes a requirement greppable across specs, tests, code, and ADRs.
+- **IDs are never reused or renumbered.** This is the load-bearing rule of the
+  whole system: the ID is what makes a requirement greppable across specs,
+  tests, code, and ADRs.
   Change the EARS text freely (git shows the history); never change the ID.
 
 To deprecate a requirement, do not delete it — mark it and back it with an ADR:
@@ -95,8 +101,9 @@ To deprecate a requirement, do not delete it — mark it and back it with an ADR
 
 ## Titles describe user benefit, not implementation
 
-The title sets the tone. A title that names a mechanism poisons the requirement toward
-implementation detail; a title that names a user benefit keeps it honest.
+The title sets the tone.
+A title that names a mechanism poisons the requirement toward implementation
+detail; a title that names a user benefit keeps it honest.
 
 | Implementation-focused (avoid) | User-benefit (prefer) |
 | --- | --- |
@@ -105,15 +112,15 @@ implementation detail; a title that names a user benefit keeps it honest.
 | Redis Cache Integration | Instant Response for Repeat Visits |
 | JWT Token Validation | Secure User Sessions |
 
-Red flag: a title ending in "-ing" (Caching, Processing, Querying) is almost always
-describing a mechanism. Start titles with a user-facing verb — Discover, View, Prevent,
-Secure, Enable.
+Red flag: a title ending in “-ing” (Caching, Processing, Querying) is almost
+always describing a mechanism.
+Start titles with a user-facing verb — Discover, View, Prevent, Secure, Enable.
 
-## Rationale answers "why does the user care?"
+## Rationale answers “why does the user care?”
 
-Every requirement carries a rationale, and it must answer one question: *why does the user
-care?* (equivalently, *what value does this give them?*). spEARS emphasizes user-facing
-value over technical concern.
+Every requirement carries a rationale, and it must answer one question: *why
+does the user care?* (equivalently, *what value does this give them?*). spEARS
+emphasizes user-facing value over technical concern.
 
 ```text
 ✅ "Users want to scan across regions without waiting. Fast response keeps exploration
@@ -123,13 +130,15 @@ value over technical concern.
     interaction. WGS84 is the standard coordinate system."
 ```
 
-The second is all mechanism — it belongs to an ADR or the Allium spec, not the rationale.
+The second is all mechanism — it belongs to an ADR or the Allium spec, not the
+rationale.
 
 ## The implementation leak (most common failure)
 
-Requirements describe *what the user observes*, never *how it is built*. Technology names,
-data-structure fields, and algorithms all belong elsewhere (the `.allium` spec, the code,
-or an ADR). This is the single most frequent and damaging mistake.
+Requirements describe *what the user observes*, never *how it is built*.
+Technology names, data-structure fields, and algorithms all belong elsewhere
+(the `.allium` spec, the code, or an ADR). This is the single most frequent and
+damaging mistake.
 
 **Technology / infrastructure:**
 
@@ -159,17 +168,19 @@ or an ADR). This is the single most frequent and damaging mistake.
 ✅ WHEN a user pans or zooms, THE SYSTEM SHALL update displayed activity within 500ms
 ```
 
-The performance *target* is a fine requirement; the *algorithm* that meets it is not. If
-the requirement names a thing a user could never see, move that detail out.
+The performance *target* is a fine requirement; the *algorithm* that meets it is
+not. If the requirement names a thing a user could never see, move that detail
+out.
 
 ## Quick checklist
 
 Before committing a requirement:
 
 - [ ] Title names a user benefit and starts with a user-facing verb
-- [ ] Each clause uses an EARS pattern (`WHEN` / `WHILE` / `IF` / `WHERE` / ubiquitous)
+- [ ] Each clause uses an EARS pattern (`WHEN` / `WHILE` / `IF` / `WHERE` /
+  ubiquitous)
 - [ ] Behavior is observable and testable; criteria are specific
 - [ ] No technology, field names, or algorithms
-- [ ] Rationale answers "why does the user care?"
+- [ ] Rationale answers “why does the user care?”
 - [ ] ID is new and sequential — never reused
 - [ ] No status, implementation, or dates (those live elsewhere)

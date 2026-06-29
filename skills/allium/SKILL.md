@@ -8,12 +8,14 @@ auto_trigger:
 ---
 # Allium
 
-Allium is a formal language for capturing software behaviour at the domain level.
-It sits between informal feature descriptions and implementation, providing a precise
-way to specify what software does without prescribing how it’s built.
+Allium is a formal language for capturing software behaviour at the domain
+level. It sits between informal feature descriptions and implementation,
+providing a precise way to specify what software does without prescribing how
+it’s built.
 
-The name comes from the botanical family containing onions and shallots, continuing a
-tradition in behaviour specification tooling established by Cucumber and Gherkin.
+The name comes from the botanical family containing onions and shallots,
+continuing a tradition in behaviour specification tooling established by
+Cucumber and Gherkin.
 
 Key principles:
 
@@ -23,9 +25,9 @@ Key principles:
 - Forces ambiguities into the open before implementation
 - Implementation-agnostic: the same spec could be implemented in any language
 
-Allium does NOT specify programming language or framework choices, database schemas or
-storage mechanisms, API designs or UI layouts, or internal algorithms (unless they are
-domain-level concerns).
+Allium does NOT specify programming language or framework choices, database
+schemas or storage mechanisms, API designs or UI layouts, or internal algorithms
+(unless they are domain-level concerns).
 
 ## Routing table
 
@@ -40,37 +42,38 @@ domain-level concerns).
 
 ## The Allium loop (recommended sequencing)
 
-The skills are not one-shot commands; they compose into an autonomous-style loop —
-**gather context → take action → verify → repeat** — that drives three artefacts to
-agreement: the **spec** (intent), the **tests** (contract), and the **code**
-(implementation). Gather context with `/elicit` or `/distill` (the spec is durable
-context); take action with `/propagate` then implementation (in spec-first work, confirm
-the new tests fail first — a test already green before you implement is already-covered
-or vacuous); verify by running the tests, then `/weed`, then CLI structural checks;
-repeat until converged.
-Verification is the phase that matters most, and the spec-plus-tests-plus-weed signal is
-what makes the loop trustworthy.
-After invoking one skill, proactively suggest the next step rather than waiting to be
-asked.
+The skills are not one-shot commands; they compose into an autonomous-style loop
+— **gather context → take action → verify → repeat** — that drives three
+artefacts to agreement: the **spec** (intent), the **tests** (contract), and the
+**code** (implementation).
+Gather context with `/elicit` or `/distill` (the spec is durable context); take
+action with `/propagate` then implementation (in spec-first work, confirm the
+new tests fail first — a test already green before you implement is
+already-covered or vacuous); verify by running the tests, then `/weed`, then CLI
+structural checks; repeat until converged.
+Verification is the phase that matters most, and the spec-plus-tests-plus-weed
+signal is what makes the loop trustworthy.
+After invoking one skill, proactively suggest the next step rather than waiting
+to be asked.
 
 Two entry points, one convergence loop:
 
-- **Spec-first (forward, from intent):** `/elicit` → `/propagate` → implement → `/weed`;
-  use `/tend` then re-`/propagate` when requirements change.
+- **Spec-first (forward, from intent):** `/elicit` → `/propagate` → implement →
+  `/weed`; use `/tend` then re-`/propagate` when requirements change.
 - **Code-first (backward, from existing code):** `/distill` → review intended vs
   accidental behaviour → `/propagate` → run tests against the code → `/weed` to
   reconcile → repeat per area.
 
-The work is “done” when tests pass, `/weed` reports no divergence, and no open questions
-remain (plus, for code-first, a fresh `/distill` finds nothing new).
-Two standing rules while looping: never weaken a generated test to make it pass (fix the
-spec and re-propagate instead), and escalate genuine ambiguity to the human rather than
-guessing.
+The work is “done” when tests pass, `/weed` reports no divergence, and no open
+questions remain (plus, for code-first, a fresh `/distill` finds nothing new).
+Two standing rules while looping: never weaken a generated test to make it pass
+(fix the spec and re-propagate instead), and escalate genuine ambiguity to the
+human rather than guessing.
 
-Implementation itself is ordinary coding — Allium produces the spec and tests, not the
-application code. See the [recommended loops](./references/recommended-loops.md)
-reference for the full walkthrough, diagrams, exit conditions and the implementation
-prompt.
+Implementation itself is ordinary coding — Allium produces the spec and tests,
+not the application code.
+See the [recommended loops](./references/recommended-loops.md) reference for the
+full walkthrough, diagrams, exit conditions and the implementation prompt.
 
 ## Quick syntax summary
 
@@ -112,8 +115,8 @@ value TimeRange { start: Timestamp, end: Timestamp, duration: end - start }
 
 ### Sum type
 
-A base entity declares a discriminator field whose capitalised values name the variants.
-Variants use the `variant` keyword.
+A base entity declares a discriminator field whose capitalised values name the
+variants. Variants use the `variant` keyword.
 
 ```
 entity Node {
@@ -131,18 +134,18 @@ variant Leaf : Node {
 }
 ```
 
-Lowercase pipe values are enum literals (`status: pending | active`). Capitalised values
-are variant references (`kind: Branch | Leaf`). Type guards (`requires:` or `if`
-branches) narrow to a variant and unlock its fields.
+Lowercase pipe values are enum literals (`status: pending | active`).
+Capitalised values are variant references (`kind: Branch | Leaf`). Type guards
+(`requires:` or `if` branches) narrow to a variant and unlock its fields.
 
 ### Module given
 
 Declares the entity instances a module’s rules operate on.
 All rules inherit these bindings.
-Not every module needs one: rules scoped by triggers on domain entities get their
-entities from the trigger.
-`given` is for specs where rules operate on shared instances that exist once per module
-scope.
+Not every module needs one: rules scoped by triggers on domain entities get
+their entities from the trigger.
+`given` is for specs where rules operate on shared instances that exist once per
+module scope.
 
 ```
 given {
@@ -151,9 +154,10 @@ given {
 }
 ```
 
-Imported module instances are accessed via qualified names (`scheduling/calendar`) and
-do not appear in the local `given` block.
-Distinct from surface `context`, which binds a parametric scope for a boundary contract.
+Imported module instances are accessed via qualified names
+(`scheduling/calendar`) and do not appear in the local `given` block.
+Distinct from surface `context`, which binds a parametric scope for a boundary
+contract.
 
 ### Rule
 
@@ -173,20 +177,21 @@ rule InvitationExpires {
 
 ### Trigger types
 
-- **External stimulus**: `when: CandidateSelectsSlot(invitation, slot)` — action from
-  outside the system
-- **State transition**: `when: interview: Interview.status transitions_to scheduled` —
-  entity changed state (transition only, not creation)
-- **State becomes**: `when: interview: Interview.status becomes scheduled` — entity has
-  this value, whether by creation or transition
-- **Temporal**: `when: invitation: Invitation.expires_at <= now` — time-based condition
-  (always add a `requires` guard against re-firing)
-- **Derived condition**: `when: interview: Interview.all_feedback_in` — derived value
-  becomes true
-- **Entity creation**: `when: batch: DigestBatch.created` — fires when a new entity is
-  created
-- **Chained**: `when: AllConfirmationsResolved(candidacy)` — subscribes to a trigger
-  emission from another rule’s ensures clause
+- **External stimulus**: `when: CandidateSelectsSlot(invitation, slot)` — action
+  from outside the system
+- **State transition**:
+  `when: interview: Interview.status transitions_to scheduled` — entity changed
+  state (transition only, not creation)
+- **State becomes**: `when: interview: Interview.status becomes scheduled` —
+  entity has this value, whether by creation or transition
+- **Temporal**: `when: invitation: Invitation.expires_at <= now` — time-based
+  condition (always add a `requires` guard against re-firing)
+- **Derived condition**: `when: interview: Interview.all_feedback_in` — derived
+  value becomes true
+- **Entity creation**: `when: batch: DigestBatch.created` — fires when a new
+  entity is created
+- **Chained**: `when: AllConfirmationsResolved(candidacy)` — subscribes to a
+  trigger emission from another rule’s ensures clause
 
 All entity-scoped triggers use explicit `var: Type` binding.
 Use `_` as a discard binding where the name is not needed:
@@ -210,20 +215,21 @@ rule ProcessDigests {
 Ensures clauses have four outcome forms:
 
 - **State changes**: `entity.field = value`
-- **Entity creation**: `Entity.created(...)` — the single canonical creation verb
-- **Trigger emission**: `TriggerName(params)` — emits an event for other rules to chain
-  from
+- **Entity creation**: `Entity.created(...)` — the single canonical creation
+  verb
+- **Trigger emission**: `TriggerName(params)` — emits an event for other rules
+  to chain from
 - **Entity removal**: `not exists entity` — asserts the entity no longer exists
 
-These forms compose with `for` iteration (`for x in collection: ...`), `if`/`else`
-conditionals and `let` bindings.
+These forms compose with `for` iteration (`for x in collection: ...`),
+`if`/`else` conditionals and `let` bindings.
 
 Entity creation uses `.created()` exclusively.
 Domain meaning lives in entity names and rule names, not in creation verbs.
 
-In state change assignments, the right-hand expression references pre-rule field values.
-Conditions within ensures blocks (`if` guards, creation parameters, trigger emission
-parameters) reference the resulting state.
+In state change assignments, the right-hand expression references pre-rule field
+values. Conditions within ensures blocks (`if` guards, creation parameters,
+trigger emission parameters) reference the resulting state.
 
 ### Surface
 
@@ -249,27 +255,28 @@ surface InterviewerDashboard {
 
 Surfaces define contracts at boundaries.
 The `facing` clause names the external party, `context` scopes the entity.
-The remaining clauses use a single vocabulary regardless of whether the boundary is
-user-facing or code-to-code: `exposes` (visible data, supports `for` iteration over
-collections), `provides` (available operations with optional when-guards), `contracts:`
-(references module-level `contract` declarations with `demands`/`fulfils` direction
-markers), `@guarantee` (named prose assertions about the boundary), `@guidance`
-(non-normative advice), `related` (associated surfaces reachable from this one),
-`timeout` (references to temporal rules that apply within the surface’s context).
+The remaining clauses use a single vocabulary regardless of whether the boundary
+is user-facing or code-to-code: `exposes` (visible data, supports `for`
+iteration over collections), `provides` (available operations with optional
+when-guards), `contracts:` (references module-level `contract` declarations with
+`demands`/`fulfils` direction markers), `@guarantee` (named prose assertions
+about the boundary), `@guidance` (non-normative advice), `related` (associated
+surfaces reachable from this one), `timeout` (references to temporal rules that
+apply within the surface’s context).
 
 The `facing` clause accepts either an actor type (with a corresponding `actor`
 declaration and `identified_by` mapping) or an entity type directly.
-Use actor declarations when the boundary has specific identity requirements; use entity
-types when any instance can interact (e.g., `facing visitor: User`). For integration
-surfaces where the external party is code, declare an actor type with a minimal
-`identified_by` expression.
-Actors that reference `within` in their `identified_by` expression must declare the
-expected context type: `within: Workspace`.
+Use actor declarations when the boundary has specific identity requirements; use
+entity types when any instance can interact (e.g., `facing visitor: User`). For
+integration surfaces where the external party is code, declare an actor type
+with a minimal `identified_by` expression.
+Actors that reference `within` in their `identified_by` expression must declare
+the expected context type: `within: Workspace`.
 
 ### Surface-to-implementation contract
 
-The `exposes` block is the field-level contract: the implementation returns exactly
-these fields, the consumer uses exactly these fields.
+The `exposes` block is the field-level contract: the implementation returns
+exactly these fields, the consumer uses exactly these fields.
 Do not add fields not listed.
 Do not omit fields that are listed.
 
@@ -286,20 +293,22 @@ contract Codec {
 }
 ```
 
-Contracts are module-level declarations referenced by name in surface `contracts:`
-clauses (`demands Codec`, `fulfils EventSubmitter`). See
-[Contracts](./references/language-reference.md#contracts) for declaration syntax and
-referencing rules.
+Contracts are module-level declarations referenced by name in surface
+`contracts:` clauses (`demands Codec`, `fulfils EventSubmitter`). See
+[Contracts](./references/language-reference.md#contracts) for declaration syntax
+and referencing rules.
 
 ### Expressions
 
-Navigation: `interview.candidacy.candidate.email`, `reply_to?.author` (optional),
-`timezone ?? "UTC"` (null coalescing).
+Navigation: `interview.candidacy.candidate.email`, `reply_to?.author`
+(optional), `timezone ?? "UTC"` (null coalescing).
 Collections: `slots.count`, `slot in invitation.slots`,
-`interviewers.any(i => i.can_solo)`, `for item in collection: item.status = cancelled`,
-`permissions + inherited` (set union), `old - new` (set difference).
-Comparisons: `status = pending`, `count >= 2`, `status in {confirmed, declined}`,
-`provider not in providers`. Boolean logic: `a and b`, `a or b`, `not a`, `a implies b`.
+`interviewers.any(i => i.can_solo)`,
+`for item in collection: item.status = cancelled`, `permissions + inherited`
+(set union), `old - new` (set difference).
+Comparisons: `status = pending`, `count >= 2`,
+`status in {confirmed, declined}`, `provider not in providers`. Boolean logic:
+`a and b`, `a or b`, `not a`, `a implies b`.
 
 ### Modular specs
 
@@ -307,8 +316,8 @@ Comparisons: `status = pending`, `count >= 2`, `status in {confirmed, declined}`
 use "github.com/allium-specs/google-oauth/abc123def" as oauth
 ```
 
-Qualified names reference entities across specs: `oauth/Session`. Coordinates are
-immutable (git SHAs or content hashes).
+Qualified names reference entities across specs: `oauth/Session`. Coordinates
+are immutable (git SHAs or content hashes).
 Local specs use relative paths: `use "./candidacy.allium" as candidacy`.
 
 ### Config
@@ -340,10 +349,11 @@ invariant NonNegativeBalance {
 }
 ```
 
-Expression-bearing invariants (`invariant Name { expression }`) assert properties over
-entity state. They are logical assertions, not runtime checks.
-Distinct from prose annotations (`@invariant Name`) in contracts, which use the `@`
-sigil to mark content the checker does not evaluate.
+Expression-bearing invariants (`invariant Name { expression }`) assert
+properties over entity state.
+They are logical assertions, not runtime checks.
+Distinct from prose annotations (`@invariant Name`) in contracts, which use the
+`@` sigil to mark content the checker does not evaluate.
 See [Invariants](./references/language-reference.md#invariants).
 
 ### Transition graph (v3)
@@ -398,20 +408,21 @@ open question "Admin ownership - should admins be assigned to specific roles?"
 
 ## Verification
 
-When the `allium` CLI is installed, a hook validates `.allium` files automatically after
-every write or edit.
+When the `allium` CLI is installed, a hook validates `.allium` files
+automatically after every write or edit.
 Fix any reported issues before presenting the result.
 If the CLI is not available, verify against the
 [language reference](./references/language-reference.md).
 
 ## References
 
-- [Language reference](./references/language-reference.md) — full syntax for entities,
-  rules, expressions, surfaces, contracts, invariants and validation
+- [Language reference](./references/language-reference.md) — full syntax for
+  entities, rules, expressions, surfaces, contracts, invariants and validation
 - [Test generation](./references/test-generation.md) — generating tests from
   specifications
 - [Recommended loops](./references/recommended-loops.md) — the gather-context →
-  take-action → verify → repeat loop, with spec-first and code-first walkthroughs
-- [Patterns](./references/patterns.md) — 9 worked patterns: auth, RBAC, invitations,
-  soft delete, notifications, usage limits, comments, library spec integration,
-  framework integration contract
+  take-action → verify → repeat loop, with spec-first and code-first
+  walkthroughs
+- [Patterns](./references/patterns.md) — 9 worked patterns: auth, RBAC,
+  invitations, soft delete, notifications, usage limits, comments, library spec
+  integration, framework integration contract
